@@ -5,22 +5,19 @@ import MethodButtons.testingButton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.json.JSONObject;
-
 public class Main {
 
-    static boolean hasUserFailedToIdentify = false;
+    static boolean isUserLoggedIn = false;
 
     public static void main(String[] args) {
         login();
 
-        if(hasUserFailedToIdentify == false)
+        if(isUserLoggedIn)
         {
             setUpShop();
         }
@@ -48,8 +45,9 @@ public class Main {
             System.err.println("IO Exception!");
         }
 
-        boolean isUserLoggedIn = false;
+        isUserLoggedIn = false;
         int numOfTries = 0;
+
         Scanner scanner = new Scanner(System.in);
 
         while (isUserLoggedIn == false && numOfTries < 3)
@@ -68,6 +66,7 @@ public class Main {
             for (int i = 0; i < workersArray.length(); i++) {
                 // Get each worker object
                 JSONObject worker = workersArray.getJSONObject(i);
+
                 String UserNameInJson = worker.getString("username");
                 String passwordInJson = worker.getString("password");
 
@@ -85,10 +84,7 @@ public class Main {
             }
         }
 
-        if (isUserLoggedIn == false) {
-            hasUserFailedToIdentify = true;
-        }
-        else
+        if (isUserLoggedIn == true)
         {
             //put here data about user
             // Hello, someone!
