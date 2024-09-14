@@ -2,38 +2,101 @@ import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
 import MenuClasses.SubMenuItem;
 import MethodButtons.testingButton;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
+import java.util.Scanner;
+
 import org.json.JSONObject;
 
 public class Main {
 
+    static boolean hasUserFailedToIdentify = false;
+
     public static void main(String[] args) {
         login();
-        setUpShop();
+
+        if(hasUserFailedToIdentify == false)
+        {
+            setUpShop();
+        }
+        else
+        {
+            System.out.println("You were locked out of your account, please try again later");
+        }
     }
 
     public static void login()
     {
-        // Specify the path to the JSON file
-        String filePath = "J&sons/Workers.json";
+        JSONArray workersArray = null;
 
         try {
+            // Specify the path to the JSON file
+            String filePath = "J&sons/WorkersLoginCredentials.json";
+
             // Read the file content into a String
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
 
             // Parse the content into a JSONObject
-            JSONObject jsonObject = new JSONObject(content);
-
-            // Use the JSONObject
-            System.out.println(jsonObject.toString(4)); // Pretty print with 4-space indentation
+            workersArray = new JSONObject(content).getJSONArray("workers");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("IO Exception!");
+        }
+
+        boolean isUserLoggedIn = false;
+        int numOfTries = 0;
+        Scanner scanner = new Scanner(System.in);
+
+        while (isUserLoggedIn == false && numOfTries < 3)
+        {
+            String userName = "";
+            String password = "";
+
+            System.out.println("please enter user name: \n");
+            userName = scanner.nextLine();
+            System.out.println("please enter password: \n");
+            password = scanner.nextLine();
+            
+            numOfTries++;
+
+            //iterate over each worker entry and check if such a user exists
+            for (int i = 0; i < workersArray.length(); i++) {
+                // Get each worker object
+                JSONObject worker = workersArray.getJSONObject(i);
+                String UserNameInJson = worker.getString("username");
+                String passwordInJson = worker.getString("password");
+
+                if(userName.equals(UserNameInJson) && password.equals(passwordInJson))
+                {
+                    isUserLoggedIn = true;
+                }
+
+            }
+
+            //dont print this on the third try, since this message will conflict with the message of "you are locked in, idiot"
+            if(isUserLoggedIn == false && numOfTries < 3)
+            {
+                System.out.println("invalid credentials, please try again");
+            }
+        }
+
+        if (isUserLoggedIn == false) {
+            hasUserFailedToIdentify = true;
+        }
+        else
+        {
+            //put here data about user
+            // Hello, someone!
+            // You are (type)
         }
     }
+
+
 
 
     public static void setUpShop()
