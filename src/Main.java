@@ -31,31 +31,12 @@ public class Main {
         }
     }
 
-    // login screen
     public static void login() {
         JSONArray workersArray = null;
-        JSONArray adminsArray = null;
 
-        JSONObject jsonData = JSONHandler.readFrom("J&sons/LoginCredentials.json");
+        // Load the JSON data from the file
+        JSONObject jsonData = JSONHandler.readFrom("J&sons/workers.json");
         workersArray = jsonData.getJSONArray("workers");
-        adminsArray = jsonData.getJSONArray("admins");
-        /*
-        try {
-            // Specify the path to the JSON file
-            String filePath = "J&sons/LoginCredentials.json";
-
-            // Read the file content into a String
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-
-            // Parse the content into a JSONObject
-            JSONObject jsonData = new JSONObject(content);
-            workersArray = jsonData.getJSONArray("workers");
-            adminsArray = jsonData.getJSONArray("admins");
-
-        } catch (IOException e) {
-            System.err.println("IO Exception!");
-        }
-        */
 
         isUserLoggedIn = false;
         int numOfTries = 0;
@@ -63,43 +44,34 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (!isUserLoggedIn && numOfTries < 3) {
-            String userName = "";
-            String password = "";
-
             System.out.println("Please enter username: ");
-            userName = scanner.nextLine();
+            String userName = scanner.nextLine();
             System.out.println("Please enter password: ");
-            password = scanner.nextLine();
+            String password = scanner.nextLine();
 
             numOfTries++;
 
-            // Check workers
+            // Check users (workers/admins)
             for (int i = 0; i < workersArray.length(); i++) {
-                JSONObject worker = workersArray.getJSONObject(i);
-                String UserNameInJson = worker.getString("username");
-                String passwordInJson = worker.getString("password");
+                JSONObject user = workersArray.getJSONObject(i);
+                String UserNameInJson = user.getString("username");
+                String passwordInJson = user.getString("password");
 
                 if (userName.equals(UserNameInJson) && password.equals(passwordInJson)) {
                     isUserLoggedIn = true;
-                    isAdmin = false;  // It's a worker
-                    System.out.println("Welcome " + UserNameInJson + ", you are logged in as a worker.");
-                    break;
-                }
-            }
-
-            // Check admins
-            if (!isUserLoggedIn) {
-                for (int i = 0; i < adminsArray.length(); i++) {
-                    JSONObject admin = adminsArray.getJSONObject(i);
-                    String adminUserNameInJson = admin.getString("username");
-                    String adminPasswordInJson = admin.getString("password");
-
-                    if (userName.equals(adminUserNameInJson) && password.equals(adminPasswordInJson)) {
-                        isUserLoggedIn = true;
-                        isAdmin = true;  // It's an admin
-                        System.out.println("Welcome " + adminUserNameInJson + ", you are logged in as an admin.");
-                        break;
+                    String jobRole = user.getString("jobRole");
+                    if (jobRole.equalsIgnoreCase("ShiftManager")) {
+                        isShiftManager = true;
                     }
+
+                    if (jobRole.equalsIgnoreCase("Admin")) {
+                        isAdmin = true;
+                        System.out.println("Welcome " + UserNameInJson + ", you are logged in as an admin.");
+                    } else {
+                        isAdmin = false;
+                        System.out.println("Welcome " + UserNameInJson + ", you are logged in as a worker.");
+                    }
+                    break;
                 }
             }
 
@@ -108,16 +80,11 @@ public class Main {
             }
         }
 
-        if (isUserLoggedIn) {
-            if (isAdmin) {
-                System.out.println("Admin access granted.");
-            } else {
-                System.out.println("Worker access granted.");
-            }
-        } else {
+        if (!isUserLoggedIn) {
             System.out.println("You were locked out of your account, please try again later.");
         }
     }
+
 
 
     public static void setUpShop()
