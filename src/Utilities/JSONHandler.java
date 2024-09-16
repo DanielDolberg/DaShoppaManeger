@@ -40,7 +40,7 @@ public class JSONHandler {
                     synchronized(mutEx) {
                         try {
                             FileWriter file = new FileWriter(JSONFilePath);
-                            file.write(infoToWriteToFile.toString());
+                            file.write(infoToWriteToFile.toString(4));
                             file.close();
                         } catch (Exception ex) {
                             System.err.println(ex);

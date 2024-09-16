@@ -1,74 +1,62 @@
-{
-  "workers": [
+{"workers": [
     {
-      "password": "1234",
-      "phoneNumber": "+972-54-2405746",
-      "fullName": "Aiden Kaminsky",
-      "branchName": "Rishon Letzion",
-      "jobRole": "ShiftManager",
-      "ID": 1,
-      "accountNumber": 111,
-      "username": "Aiden"
+        "password": "1234",
+        "phoneNumber": "+972-54-2405746",
+        "fullName": "Aiden Kaminsky",
+        "branchName": "Rishon Letzion",
+        "jobRole": "ShiftManager",
+        "ID": 1,
+        "accountNumber": 111,
+        "username": "Aiden"
     },
     {
-      "password": "superSecretPassword",
-      "phoneNumber": "+972-52-2778898",
-      "fullName": "Daniel Dolberg",
-      "branchName": "Rishon Letzion",
-      "jobRole": "Cashier",
-      "ID": 2,
-      "accountNumber": 222,
-      "username": "Daniel"
+        "password": "superSecretPassword",
+        "phoneNumber": "+972-52-2778898",
+        "fullName": "Daniel Dolberg",
+        "branchName": "Rishon Letzion",
+        "jobRole": "Cashier",
+        "ID": 2,
+        "accountNumber": 222,
+        "username": "Daniel"
     },
     {
-      "password": "2TZsgaXK6vXyo6FSzA0QW0odN7x5oWj",
-      "phoneNumber": "+972-54-5350435",
-      "fullName": "Chen Moasis",
-      "branchName": "Rishon Letzion",
-      "jobRole": "SalesPerson",
-      "ID": 3,
-      "accountNumber": 333,
-      "username": "Chen"
+        "password": "2TZsgaXK6vXyo6FSzA0QW0odN7x5oWj",
+        "phoneNumber": "+972-54-5350435",
+        "fullName": "Chen Moasis",
+        "branchName": "Rishon Letzion",
+        "jobRole": "SalesPerson",
+        "ID": 3,
+        "accountNumber": 333,
+        "username": "Chen"
     },
     {
-      "password": "shashy",
-      "phoneNumber": "+972-52-7529608",
-      "fullName": "Shani Elgamil",
-      "branchName": "Ashdod",
-      "jobRole": "ShiftManager",
-      "ID": 4,
-      "accountNumber": 444,
-      "username": "Shani"
+        "password": "shashy",
+        "phoneNumber": "+972-52-7529608",
+        "fullName": "Shani Elgamil",
+        "branchName": "Ashdod",
+        "jobRole": "ShiftManager",
+        "ID": 4,
+        "accountNumber": 444,
+        "username": "Shani"
     },
     {
-      "password": "12345",
-      "phoneNumber": "+972-55-8822676",
-      "fullName": "Elinor Zalogin",
-      "branchName": "Ashdod",
-      "jobRole": "SalesPerson",
-      "ID": 5,
-      "accountNumber": 555,
-      "username": "Elinor"
+        "password": "12345",
+        "phoneNumber": "+972-55-8822676",
+        "fullName": "Elinor Zalogin",
+        "branchName": "Ashdod",
+        "jobRole": "SalesPerson",
+        "ID": 5,
+        "accountNumber": 555,
+        "username": "Elinor"
     },
     {
-      "password": "admin",
-      "phoneNumber": "+972-55-8822676",
-      "fullName": "Admin User",
-      "branchName": "All",
-      "jobRole": "Admin",
-      "ID": 0,
-      "accountNumber": 1,
-      "username": "admin"
-    },
-    {
-      "password": "1234",
-      "phoneNumber": "some phone",
-      "fullName": "some worker",
-      "branchName": "Ashdod",
-      "jobRole": "Admin",
-      "ID": 7,
-      "accountNumber": 777,
-      "username": "admin2"
+        "password": "admin",
+        "phoneNumber": "+972-55-8822676",
+        "fullName": "Admin User",
+        "branchName": "All",
+        "jobRole": "Admin",
+        "ID": 0,
+        "accountNumber": 1,
+        "username": "admin"
     }
-  ]
-}
+]}
