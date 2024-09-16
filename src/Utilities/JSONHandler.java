@@ -1,5 +1,6 @@
 package Utilities;
 
+import ShopClasses.CustomerClasses.Customer;
 import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +10,10 @@ import java.nio.file.Paths;
 public class JSONHandler {
 
     private final static Object mutEx = new Object();
+
+    public final static String CustomersJsonFilePath = "J&sons/customers.json";
+    public final static String StockJsonFilePath = "J&sons/stock.json";
+    public final static String WorkersJsonFilePath = "J&sons/workers.json";
 
     public static JSONObject readFrom(String JSONFilePath){
         JSONObject jsonData;

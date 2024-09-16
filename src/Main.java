@@ -1,3 +1,4 @@
+import MethodButtons.AddNewWorkerButton;
 import MethodButtons.ViewAllAccountsButton;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
@@ -35,7 +36,7 @@ public class Main {
         JSONArray workersArray = null;
 
         // Load the JSON data from the file
-        JSONObject jsonData = JSONHandler.readFrom("J&sons/workers.json");
+        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
         workersArray = jsonData.getJSONArray("workers");
 
         isUserLoggedIn = false;
@@ -85,8 +86,6 @@ public class Main {
         }
     }
 
-
-
     public static void setUpShop()
     {
         MainMenuItem main = new MainMenuItem("DeShooppa Manager Main Menu");
@@ -98,7 +97,7 @@ public class Main {
             viewAllAccounts.AttachObserver(new ViewAllAccountsButton());
             manageWorkers.AddOption(viewAllAccounts);
             MethodMenuItem registerNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem
-            registerNewAccount.AttachObserver(new testingButton()); //!!!change!!!
+            registerNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
             manageWorkers.AddOption(registerNewAccount);
             MethodMenuItem updateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
             updateAnAccount.AttachObserver(new testingButton()); //!!!change!!!
@@ -159,26 +158,6 @@ public class Main {
         manageLogs.AddOption(manageLogs_1);
         main.AddOption(manageLogs);
 
-        main.ActivateMenuItem();
-    }
-
-    // !!!! DELETE LATER !!!!!
-    public static void setUpToTest()
-    {
-        MainMenuItem main = new MainMenuItem("main");
-        SubMenuItem shani = new MainMenuItem("shanig a mil");
-        MethodMenuItem shaniSleep = new MethodMenuItem("sleep");
-        shaniSleep.AttachObserver(new testingButton());
-        shani.AddOption(shaniSleep);
-        SubMenuItem Aiden = new MainMenuItem("add an kaminslky");
-        SubMenuItem khen = new MainMenuItem("khen moasis");
-        khen.AddOption(new SubMenuItem("ariel girgani"));
-        SubMenuItem dan = new MainMenuItem("dan iel dabegth");
-        main.AddOption(shani);
-        main.AddOption(Aiden);
-        main.AddOption(khen);
-        main.AddOption(dan);
-        main.AddOption(shaniSleep);
         main.ActivateMenuItem();
     }
 }

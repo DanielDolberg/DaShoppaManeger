@@ -10,7 +10,7 @@ public class ViewAllCustomersButton implements IMethodObserver
     {
         // read from JSON, make an array string of all customers
         JSONArray customersArray = null;
-        JSONObject jsonData = JSONHandler.readFrom("J&sons/customers.json");
+        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.CustomersJsonFilePath);
         customersArray = jsonData.getJSONArray("clients");
         /*
         try {
