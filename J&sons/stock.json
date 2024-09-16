@@ -1,0 +1,52 @@
+{
+  "branches": {
+    "Rishon Letzion": {
+      "items": [
+        {
+          "itemName": "T-Shirt",
+          "price": 49.99,
+          "amountInStock": 8
+        },
+        {
+          "itemName": "Jeans",
+          "price": 199.99,
+          "amountInStock": 5
+        },
+        {
+          "itemName": "Jacket",
+          "price": 349.99,
+          "amountInStock": 2
+        },
+        {
+          "itemName": "Sweater",
+          "price": 79.99,
+          "amountInStock": 7
+        }
+      ]
+    },
+    "Ashdod": {
+      "items": [
+        {
+          "itemName": "T-Shirt",
+          "price": 49.99,
+          "amountInStock": 6
+        },
+        {
+          "itemName": "Jeans",
+          "price": 199.99,
+          "amountInStock": 3
+        },
+        {
+          "itemName": "Jacket",
+          "price": 349.99,
+          "amountInStock": 1
+        },
+        {
+          "itemName": "Sweater",
+          "price": 79.99,
+          "amountInStock": 10
+        }
+      ]
+    }
+  }
+}

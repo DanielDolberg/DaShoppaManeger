@@ -1,7 +1,7 @@
 package ShopClasses.CustomerClasses;
 
 public class VIPCustomer extends Customer {
-    public VIPCustomer(String i_fullName, long i_phoneNumber, long i_ID) {
+    public VIPCustomer(String i_fullName, String i_phoneNumber, long i_ID) {
         super(i_fullName,i_phoneNumber,i_ID);
         status = CustomerStatus.VIP;
         discountPercent = 0.5;

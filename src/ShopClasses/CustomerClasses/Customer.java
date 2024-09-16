@@ -1,18 +1,16 @@
 package ShopClasses.CustomerClasses;
 
-import java.security.PublicKey;
-
 public abstract class Customer
 {
     // values
     protected String fullName;
     protected long ID;
-    protected long phoneNumber;
+    protected String phoneNumber;
     protected CustomerStatus status;
     protected double discountPercent;
 
     // constructor
-    public Customer(String i_fullName, long i_phoneNumber, long i_ID)
+    public Customer(String i_fullName, String i_phoneNumber, long i_ID)
     {
         fullName = i_fullName;
         phoneNumber = i_phoneNumber;
@@ -33,11 +31,11 @@ public abstract class Customer
         fullName = i_fullName;
     }
 
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(long i_PhoneNumber) {
+    public void setPhoneNumber(String i_PhoneNumber) {
         phoneNumber = i_PhoneNumber;
     }
 

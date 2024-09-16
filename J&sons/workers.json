@@ -3,15 +3,15 @@
     {
       "fullName": "Aiden Kaminsky",
       "ID": 1,
-      "phoneNumber": 9725424057,
+      "phoneNumber": "+972-54-2405746",
       "accountNumber": 111,
-      "branchName": "Kfar Sava",
+      "branchName": "Rishon Letzion",
       "jobRole": "ShiftManager"
     },
     {
       "fullName": "Daniel Dolberg",
       "ID": 2,
-      "phoneNumber": 9876543210,
+      "phoneNumber": "+972-52-2778898",
       "accountNumber": 222,
       "branchName": "Rishon Letzion",
       "jobRole": "Cashier"
@@ -19,25 +19,25 @@
     {
       "fullName": "Chen Moasis",
       "ID": 3,
-      "phoneNumber": 5551234567,
+      "phoneNumber": "+972-54-5350435",
       "accountNumber": 333,
-      "branchName": "Uptown Branch",
+      "branchName": "Rishon Letzion",
       "jobRole": "SalesPerson"
     },
     {
       "fullName": "Shani Elgamil",
       "ID": 4,
-      "phoneNumber": 5550234587,
+      "phoneNumber": "+972-52-7529608",
       "accountNumber": 444,
-      "branchName": "Uptown Branch",
-      "jobRole": "SalesPerson"
+      "branchName": "Ashdod",
+      "jobRole": "ShiftManager"
     },
     {
       "fullName": "Elinor Zalogin",
       "ID": 5,
-      "phoneNumber": 4441234507,
+      "phoneNumber": "+972-55-8822676",
       "accountNumber": 555,
-      "branchName": "Uptown Branch",
+      "branchName": "Ashdod",
       "jobRole": "SalesPerson"
     }
   ],
@@ -47,7 +47,7 @@
       "ID": 0,
       "phoneNumber": 1111111111,
       "accountNumber": 1,
-      "branchName": "Headquarters",
+      "branchName": "All",
       "jobRole": "ShiftManager"
     }
   ]

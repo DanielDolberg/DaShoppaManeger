@@ -4,11 +4,11 @@ public class Worker
 {
     protected String fullName;
     protected long ID;
-    protected long phoneNumber;
+    protected String phoneNumber;
     protected long accountNumber;
     protected String branchName;
 
-    public Worker(JobRole jobRole, long workerNumber, String branchName, long accountNumber, long phoneNumber, long ID, String fullName) {
+    public Worker(JobRole jobRole, long workerNumber, String branchName, long accountNumber, String phoneNumber, long ID, String fullName) {
         this.jobRole = jobRole;
         this.workerNumber = workerNumber;
         this.branchName = branchName;
@@ -34,11 +34,11 @@ public class Worker
         this.ID = ID;
     }
 
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
