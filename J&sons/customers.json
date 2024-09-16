@@ -2,31 +2,27 @@
   "clients": [
     {
       "fullName": "John Doe",
-      "idNumber": "123456789",
-      "phone": "+972-50-1234567",
-      "clientType": "VIP",
-      "discountAmount": 20
+      "ID": "123456789",
+      "phoneNumber": "+972-50-1234567",
+      "status": "VIP"
     },
     {
       "fullName": "Jane Smith",
-      "idNumber": "987654321",
-      "phone": "+972-50-9876543",
-      "clientType": "Returning",
-      "discountAmount": 10
+      "ID": "987654321",
+      "phoneNumber": "+972-50-9876543",
+      "status": "Returning"
     },
     {
       "fullName": "Alice Green",
-      "idNumber": "555888222",
-      "phone": "+972-50-5558882",
-      "clientType": "New",
-      "discountAmount": 5
+      "ID": "555888222",
+      "phoneNumber": "+972-50-5558882",
+      "status": "New"
     },
     {
       "fullName": "Michael Johnson",
-      "idNumber": "123123123",
-      "phone": "+972-50-1231231",
-      "clientType": "New",
-      "discountAmount": 5
+      "ID": "123123123",
+      "phoneNumber": "+972-50-1231231",
+      "status": "New"
     }
   ]
 }
