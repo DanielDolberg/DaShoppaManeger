@@ -1,3 +1,4 @@
+import MethodButtons.ViewAllAccountsButton;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
@@ -126,8 +127,8 @@ public class Main {
         if (isAdmin) {
             // Manage Workers (admin only) - sub
             SubMenuItem manageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
-            MethodMenuItem viewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem
-            viewAllAccounts.AttachObserver(new testingButton()); //!!!change!!!
+            MethodMenuItem viewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
+            viewAllAccounts.AttachObserver(new ViewAllAccountsButton());
             manageWorkers.AddOption(viewAllAccounts);
             MethodMenuItem registerNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem
             registerNewAccount.AttachObserver(new testingButton()); //!!!change!!!
@@ -156,7 +157,7 @@ public class Main {
         MethodMenuItem manageCustomers_2 = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
         manageCustomers_2.AttachObserver(new testingButton()); //!!!change!!! //manageCustomers_3 might answer this
         manageCustomers.AddOption(manageCustomers_2);
-        MethodMenuItem manageCustomers_3 = new MethodMenuItem("View All The Customers"); //MethodMenuItem
+        MethodMenuItem manageCustomers_3 = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
         manageCustomers_3.AttachObserver(new ViewAllCustomersButton());
         manageCustomers.AddOption(manageCustomers_3);
         main.AddOption(manageCustomers);
