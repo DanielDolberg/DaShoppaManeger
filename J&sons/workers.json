@@ -1,0 +1,54 @@
+{
+  "workers": [
+    {
+      "fullName": "Aiden Kaminsky",
+      "ID": 1,
+      "phoneNumber": 9725424057,
+      "accountNumber": 111,
+      "branchName": "Kfar Sava",
+      "jobRole": "ShiftManager"
+    },
+    {
+      "fullName": "Daniel Dolberg",
+      "ID": 2,
+      "phoneNumber": 9876543210,
+      "accountNumber": 222,
+      "branchName": "Rishon Letzion",
+      "jobRole": "Cashier"
+    },
+    {
+      "fullName": "Chen Moasis",
+      "ID": 3,
+      "phoneNumber": 5551234567,
+      "accountNumber": 333,
+      "branchName": "Uptown Branch",
+      "jobRole": "SalesPerson"
+    },
+    {
+      "fullName": "Shani Elgamil",
+      "ID": 4,
+      "phoneNumber": 5550234587,
+      "accountNumber": 444,
+      "branchName": "Uptown Branch",
+      "jobRole": "SalesPerson"
+    },
+    {
+      "fullName": "Elinor Zalogin",
+      "ID": 5,
+      "phoneNumber": 4441234507,
+      "accountNumber": 555,
+      "branchName": "Uptown Branch",
+      "jobRole": "SalesPerson"
+    }
+  ],
+  "admins": [
+    {
+      "fullName": "Admin User",
+      "ID": 0,
+      "phoneNumber": 1111111111,
+      "accountNumber": 1,
+      "branchName": "Headquarters",
+      "jobRole": "ShiftManager"
+    }
+  ]
+}

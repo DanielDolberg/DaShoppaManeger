@@ -1,0 +1,32 @@
+{
+  "clients": [
+    {
+      "fullName": "John Doe",
+      "idNumber": "123456789",
+      "phone": "+972-50-1234567",
+      "clientType": "VIP",
+      "discountAmount": 20
+    },
+    {
+      "fullName": "Jane Smith",
+      "idNumber": "987654321",
+      "phone": "+972-50-9876543",
+      "clientType": "Returning",
+      "discountAmount": 10
+    },
+    {
+      "fullName": "Alice Green",
+      "idNumber": "555888222",
+      "phone": "+972-50-5558882",
+      "clientType": "New",
+      "discountAmount": 5
+    },
+    {
+      "fullName": "Michael Johnson",
+      "idNumber": "123123123",
+      "phone": "+972-50-1231231",
+      "clientType": "New",
+      "discountAmount": 5
+    }
+  ]
+}

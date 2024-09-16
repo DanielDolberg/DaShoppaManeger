@@ -13,6 +13,8 @@ import java.util.Scanner;
 public class Main {
 
     static boolean isUserLoggedIn = false;
+    static boolean isAdmin = false;
+    static boolean isShiftManager = false;
 
     public static void main(String[] args) {
         login();
@@ -21,25 +23,28 @@ public class Main {
         {
             setUpShop();
         }
+
         else
         {
             System.out.println("You were locked out of your account, please try again later");
         }
     }
 
-    public static void login()
-    {
+    public static void login() {
         JSONArray workersArray = null;
+        JSONArray adminsArray = null;
 
         try {
             // Specify the path to the JSON file
-            String filePath = "J&sons/WorkersLoginCredentials.json";
+            String filePath = "J&sons/LoginCredentials.json";
 
             // Read the file content into a String
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
 
             // Parse the content into a JSONObject
-            workersArray = new JSONObject(content).getJSONArray("workers");
+            JSONObject jsonData = new JSONObject(content);
+            workersArray = jsonData.getJSONArray("workers");
+            adminsArray = jsonData.getJSONArray("admins");
 
         } catch (IOException e) {
             System.err.println("IO Exception!");
@@ -50,59 +55,82 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        while (isUserLoggedIn == false && numOfTries < 3)
-        {
+        while (!isUserLoggedIn && numOfTries < 3) {
             String userName = "";
             String password = "";
 
-            System.out.println("please enter user name: \n");
+            System.out.println("Please enter username: ");
             userName = scanner.nextLine();
-            System.out.println("please enter password: \n");
+            System.out.println("Please enter password: ");
             password = scanner.nextLine();
-            
+
             numOfTries++;
 
-            //iterate over each worker entry and check if such a user exists
+            // Check workers
             for (int i = 0; i < workersArray.length(); i++) {
-                // Get each worker object
                 JSONObject worker = workersArray.getJSONObject(i);
-
                 String UserNameInJson = worker.getString("username");
                 String passwordInJson = worker.getString("password");
 
-                if(userName.equals(UserNameInJson) && password.equals(passwordInJson))
-                {
+                if (userName.equals(UserNameInJson) && password.equals(passwordInJson)) {
                     isUserLoggedIn = true;
+                    isAdmin = false;  // It's a worker
+                    System.out.println("Welcome " + UserNameInJson + ", you are logged in as a worker.");
+                    break;
                 }
-
             }
 
-            //dont print this on the third try, since this message will conflict with the message of "you are locked in, idiot"
-            if(isUserLoggedIn == false && numOfTries < 3)
-            {
-                System.out.println("invalid credentials, please try again");
+            // Check admins
+            if (!isUserLoggedIn) {
+                for (int i = 0; i < adminsArray.length(); i++) {
+                    JSONObject admin = adminsArray.getJSONObject(i);
+                    String adminUserNameInJson = admin.getString("username");
+                    String adminPasswordInJson = admin.getString("password");
+
+                    if (userName.equals(adminUserNameInJson) && password.equals(adminPasswordInJson)) {
+                        isUserLoggedIn = true;
+                        isAdmin = true;  // It's an admin
+                        System.out.println("Welcome " + adminUserNameInJson + ", you are logged in as an admin.");
+                        break;
+                    }
+                }
+            }
+
+            if (!isUserLoggedIn && numOfTries < 3) {
+                System.out.println("Invalid credentials, please try again.");
             }
         }
 
-        if (isUserLoggedIn == true)
-        {
-            //put here data about user
-            // Hello, someone!
-            // You are (type)
+        if (isUserLoggedIn) {
+            if (isAdmin) {
+                System.out.println("Admin access granted.");
+            } else {
+                System.out.println("Worker access granted.");
+            }
+        } else {
+            System.out.println("You were locked out of your account, please try again later.");
         }
     }
-
-
 
 
     public static void setUpShop()
     {
         MainMenuItem main = new MainMenuItem("DeShooppa Manager Main Menu");
 
-        // Branch Info - option
-        MethodMenuItem branchInfo = new MethodMenuItem("Print Branch Info");
-        branchInfo.AttachObserver(new testingButton()); //!!!change!!!
-        main.AddOption(branchInfo);
+        if (isAdmin) {
+            // Manage Workers (admin only) - sub
+            SubMenuItem manageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
+            MethodMenuItem viewAllAccounts = new MethodMenuItem("View All Accounts"); //option
+            viewAllAccounts.AttachObserver(new testingButton()); //!!!change!!!
+            manageWorkers.AddOption(viewAllAccounts);
+            MethodMenuItem registerNewAccount = new MethodMenuItem("Register New Account"); //option
+            registerNewAccount.AttachObserver(new testingButton()); //!!!change!!!
+            manageWorkers.AddOption(registerNewAccount);
+            MethodMenuItem updateAnAccount = new MethodMenuItem("Update An Account"); //option
+            updateAnAccount.AttachObserver(new testingButton()); //!!!change!!!
+            manageWorkers.AddOption(updateAnAccount);
+            main.AddOption(manageWorkers);
+        }
 
         // Manage Product Inventory - sub
         SubMenuItem productInventory = new SubMenuItem("Manage Stock");
@@ -114,19 +142,6 @@ public class Main {
         productInventory.AddOption(productInventory_3);
         main.AddOption(productInventory);
 
-        // Manage Workers (admin only) - sub
-        SubMenuItem manageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
-        MethodMenuItem viewAllAccounts = new MethodMenuItem("View All Accounts"); //option
-        viewAllAccounts.AttachObserver(new testingButton()); //!!!change!!!
-        manageWorkers.AddOption(viewAllAccounts);
-        MethodMenuItem registerNewAccount = new MethodMenuItem("Register New Account"); //option
-        registerNewAccount.AttachObserver(new testingButton()); //!!!change!!!
-        manageWorkers.AddOption(registerNewAccount);
-        MethodMenuItem updateAnAccount = new MethodMenuItem("Update An Account"); //option
-        updateAnAccount.AttachObserver(new testingButton()); //!!!change!!!
-        manageWorkers.AddOption(updateAnAccount);
-        main.AddOption(manageWorkers);
-
         // Manage Customers - sub
         SubMenuItem manageCustomers = new SubMenuItem("Manage Customers");
         MethodMenuItem manageCustomers_1 = new MethodMenuItem("Add New Customer"); //option
@@ -135,13 +150,10 @@ public class Main {
         MethodMenuItem manageCustomers_2 = new MethodMenuItem("View Customer's Details"); //option
         manageCustomers_2.AttachObserver(new testingButton()); //!!!change!!!
         manageCustomers.AddOption(manageCustomers_2);
-        MethodMenuItem manageCustomers_3 = new MethodMenuItem("Update Customer Details"); //option
-        manageCustomers_3.AttachObserver(new testingButton()); //!!!change!!!
-        manageCustomers.AddOption(manageCustomers_3);
         main.AddOption(manageCustomers);
 
         // Manage Sales Analytics Reports - sub
-        SubMenuItem manageReports = new SubMenuItem("View Sales Statisttics (all branches)");
+        SubMenuItem manageReports = new SubMenuItem("View Sales Statistics (all branches)");
         MethodMenuItem manageReports_1 = new MethodMenuItem("View Sales for Branch"); //option
         manageReports_1.AttachObserver(new testingButton()); //!!!change!!!
         manageReports.AddOption(manageReports_1);
@@ -154,11 +166,13 @@ public class Main {
         main.AddOption(manageReports);
 
         // Manage Chat - sub
-        SubMenuItem manageChat = new SubMenuItem("Manage Chats");
+        SubMenuItem manageChat = new SubMenuItem("Open Chat");
         SubMenuItem manageChat_1 = new SubMenuItem("Start Chat with Another Employee"); //!!!option or sub?
         manageChat.AddOption(manageChat_1);
-        SubMenuItem manageChat_2 = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!option or sub?
-        manageChat.AddOption(manageChat_2);
+        if (isShiftManager) {
+            SubMenuItem manageChat_2 = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!option or sub?
+            manageChat.AddOption(manageChat_2);
+        }
         main.AddOption(manageChat);
 
         // Manage Logs - sub
