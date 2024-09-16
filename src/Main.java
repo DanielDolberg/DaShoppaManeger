@@ -169,7 +169,7 @@ public class Main {
         SubMenuItem manageChat = new SubMenuItem("Open Chat");
         SubMenuItem manageChat_1 = new SubMenuItem("Start Chat with Another Employee"); //!!!option or sub?
         manageChat.AddOption(manageChat_1);
-        if (isShiftManager) {
+        if (isShiftManager || isAdmin) {
             SubMenuItem manageChat_2 = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!option or sub?
             manageChat.AddOption(manageChat_2);
         }
