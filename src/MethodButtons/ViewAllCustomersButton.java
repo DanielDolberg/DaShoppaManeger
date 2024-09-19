@@ -1,6 +1,6 @@
 package MethodButtons;
-import Utilities.JSONHandler;
 import MenuClasses.IMethodObserver;
+import Utilities.JSONHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,20 +12,6 @@ public class ViewAllCustomersButton implements IMethodObserver
         JSONArray customersArray = null;
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.CustomersJsonFilePath);
         customersArray = jsonData.getJSONArray("clients");
-        /*
-        try {
-            // Specify the path to the JSON file
-            String filePath = "J&sons/customers.json";
-
-            // Read the file content into a String
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-
-            // Parse the content into a JSONObject
-            JSONObject jsonData = new JSONObject(content);
-            customersArray = jsonData.getJSONArray("clients");
-        } catch (IOException e) {
-            System.err.println("IO Exception!");
-        }*/
 
         // print the array *in an orderly way
         // Print table header

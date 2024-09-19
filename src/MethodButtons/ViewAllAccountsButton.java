@@ -9,7 +9,7 @@ public class ViewAllAccountsButton implements IMethodObserver {
     @Override
     public void Invoke() {
         // Read from JSON and create an array of all accounts
-        JSONObject jsonData = JSONHandler.readFrom("J&sons/workers.json");
+        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
 
         // Get the array for workers (includes all accounts)
         JSONArray workersArray = jsonData.getJSONArray("workers");

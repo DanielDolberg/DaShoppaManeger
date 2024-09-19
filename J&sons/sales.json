@@ -1,0 +1,34 @@
+{"sales": [
+  {
+    "branch": "Rishon Letzion",
+    "worker": "Aiden Kaminsky",
+    "customer": "John Doe",
+    "status": "VIP",
+    "itemName": "T-Shirt",
+    "amount": 1
+  },
+  {
+    "branch": "Rishon Letzion",
+    "worker": "Aiden Kaminsky",
+    "customer": "John Doe",
+    "status": "VIP",
+    "itemName": "T-Shirt",
+    "amount": 1
+  },
+  {
+    "branch": "Ashdod",
+    "worker": "shashy",
+    "customer": "John Doe",
+    "status": "VIP",
+    "itemName": "T-Shirt",
+    "amount": 1
+  },
+  {
+    "branch": "Ashdod",
+    "worker": "shashy",
+    "customer": "John Doe",
+    "status": "VIP",
+    "itemName": "T-Shirt",
+    "amount": 1
+  }
+]}

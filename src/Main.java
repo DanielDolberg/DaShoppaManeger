@@ -1,11 +1,8 @@
-import MethodButtons.AddNewWorkerButton;
-import MethodButtons.ViewAllAccountsButton;
+import MethodButtons.*;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
 import MenuClasses.SubMenuItem;
-import MethodButtons.ViewAllCustomersButton;
-import MethodButtons.testingButton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,9 +10,10 @@ import java.util.Scanner;
 
 public class Main {
 
-    static boolean isUserLoggedIn = false;
-    static boolean isAdmin = false;
-    static boolean isShiftManager = false;
+    public static boolean isUserLoggedIn = false;
+    public static boolean isAdmin = false;
+    public static boolean isShiftManager = false;
+    public static String workerBranch = "";
 
     public static void main(String[] args) {
         // login screen
@@ -65,6 +63,8 @@ public class Main {
                         isShiftManager = true;
                     }
 
+                    workerBranch = user.getString("branchName");
+
                     if (jobRole.equalsIgnoreCase("Admin")) {
                         isAdmin = true;
                         System.out.println("Welcome " + UserNameInJson + ", you are logged in as an admin.");
@@ -107,11 +107,13 @@ public class Main {
 
         // Manage Product Inventory - sub
         SubMenuItem productInventory = new SubMenuItem("Manage Stock");
-        SubMenuItem productInventory_1 = new SubMenuItem("View All Stock in This Branch"); //!!!MethodMenuItem or sub ?
+        MethodMenuItem productInventory_1 = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //Not done
+        productInventory_1.AttachObserver(new ViewAllStockInThisBranchButton());
         productInventory.AddOption(productInventory_1);
         SubMenuItem productInventory_2 = new SubMenuItem("Preform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
         productInventory.AddOption(productInventory_2);
-        SubMenuItem productInventory_3 = new SubMenuItem("View Product Stock in All Branches"); //!!!MethodMenuItem or sub ?
+        MethodMenuItem productInventory_3 = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
+        productInventory_3.AttachObserver(new ViewStockInAllBranchesButton());
         productInventory.AddOption(productInventory_3);
         main.AddOption(productInventory);
 
