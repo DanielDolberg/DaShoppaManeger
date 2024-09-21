@@ -13,10 +13,10 @@ public class ViewAllStockInThisBranchButton  implements IMethodObserver
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
         JSONObject branches = jsonData.getJSONObject("branches");
         String branchName = Main.workerBranch;
-        JSONArray itemsArray = branches.getJSONObject("Rishon Letzion").getJSONArray("items"); //change "Rishon Letzion" to MainClass.Main.workerBranch
+        JSONArray itemsArray = branches.getJSONObject(branchName).getJSONArray("items");
 
         // Print table header
-        System.out.println("Stock in " + "Rishon Letzion");
+        System.out.println("Stock in " + branchName);
         System.out.printf("%-20s %-12s %-15s%n", "Item Name", "Price", "Amount In Stock");
         System.out.println("--------------------------------------------------------------");
 

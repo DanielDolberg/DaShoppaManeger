@@ -98,7 +98,7 @@ public class Main {
             MethodMenuItem viewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
             viewAllAccounts.AttachObserver(new ViewAllAccountsButton());
             manageWorkers.AddOption(viewAllAccounts);
-            MethodMenuItem registerNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem
+            MethodMenuItem registerNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem //DONE
             registerNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
             manageWorkers.AddOption(registerNewAccount);
             MethodMenuItem updateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
@@ -110,7 +110,7 @@ public class Main {
         // Manage Product Inventory - sub
         SubMenuItem productInventory = new SubMenuItem("Manage Stock");
         if (!isAdmin) {
-            MethodMenuItem productInventory_1 = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //Not done
+            MethodMenuItem productInventory_1 = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //DONE
             productInventory_1.AttachObserver(new ViewAllStockInThisBranchButton());
             productInventory.AddOption(productInventory_1);
         }
