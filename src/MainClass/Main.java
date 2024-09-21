@@ -1,3 +1,5 @@
+package MainClass;
+
 import MethodButtons.*;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
@@ -88,7 +90,7 @@ public class Main {
 
     public static void setUpShop()
     {
-        MainMenuItem main = new MainMenuItem("DeShooppa Manager Main Menu");
+        MainMenuItem main = new MainMenuItem("DeShooppa Manager MainClass.Main Menu");
 
         if (isAdmin) {
             // Manage Workers (admin only) - sub
@@ -107,9 +109,11 @@ public class Main {
 
         // Manage Product Inventory - sub
         SubMenuItem productInventory = new SubMenuItem("Manage Stock");
-        MethodMenuItem productInventory_1 = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //Not done
-        productInventory_1.AttachObserver(new ViewAllStockInThisBranchButton());
-        productInventory.AddOption(productInventory_1);
+        if (!isAdmin) {
+            MethodMenuItem productInventory_1 = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //Not done
+            productInventory_1.AttachObserver(new ViewAllStockInThisBranchButton());
+            productInventory.AddOption(productInventory_1);
+        }
         SubMenuItem productInventory_2 = new SubMenuItem("Preform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
         productInventory.AddOption(productInventory_2);
         MethodMenuItem productInventory_3 = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE

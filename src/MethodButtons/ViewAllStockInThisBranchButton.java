@@ -3,6 +3,7 @@ import MenuClasses.IMethodObserver;
 import Utilities.JSONHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import MainClass.Main;
 
 public class ViewAllStockInThisBranchButton  implements IMethodObserver
 {
@@ -11,8 +12,8 @@ public class ViewAllStockInThisBranchButton  implements IMethodObserver
         // read from JSON, make an array string of all customers
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
         JSONObject branches = jsonData.getJSONObject("branches");
-        //String branchName = Main.workerBranch;
-        JSONArray itemsArray = branches.getJSONObject("Rishon Letzion").getJSONArray("items"); //change "Rishon Letzion" to Main.workerBranch
+        String branchName = Main.workerBranch;
+        JSONArray itemsArray = branches.getJSONObject("Rishon Letzion").getJSONArray("items"); //change "Rishon Letzion" to MainClass.Main.workerBranch
 
         // Print table header
         System.out.println("Stock in " + "Rishon Letzion");

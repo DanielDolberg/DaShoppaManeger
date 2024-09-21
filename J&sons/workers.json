@@ -1,6 +1,6 @@
 {"workers": [
     {
-        "password": "1234",
+        "password": "87654321",
         "phoneNumber": "+972-54-2405746",
         "fullName": "Aiden Kaminsky",
         "branchName": "Rishon Letzion",
@@ -30,7 +30,7 @@
         "username": "Chen"
     },
     {
-        "password": "shashy",
+        "password": "shashy123",
         "phoneNumber": "+972-52-7529608",
         "fullName": "Shani Elgamil",
         "branchName": "Ashdod",
@@ -40,7 +40,7 @@
         "username": "Shani"
     },
     {
-        "password": "12345",
+        "password": "12345678",
         "phoneNumber": "+972-55-8822676",
         "fullName": "Elinor Zalogin",
         "branchName": "Ashdod",
@@ -50,7 +50,7 @@
         "username": "Elinor"
     },
     {
-        "password": "admin",
+        "password": "admin123",
         "phoneNumber": "+972-55-8822676",
         "fullName": "Admin User",
         "branchName": "All",
