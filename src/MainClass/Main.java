@@ -114,7 +114,7 @@ public class Main {
             productInventory_1.AttachObserver(new ViewAllStockInThisBranchButton());
             productInventory.AddOption(productInventory_1);
         }
-        SubMenuItem productInventory_2 = new SubMenuItem("Preform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
+        SubMenuItem productInventory_2 = new SubMenuItem("Perform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
         productInventory.AddOption(productInventory_2);
         MethodMenuItem productInventory_3 = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
         productInventory_3.AttachObserver(new ViewStockInAllBranchesButton());
