@@ -116,36 +116,41 @@ public class Main {
         }
         SubMenuItem productInventory_2 = new SubMenuItem("Preform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
         productInventory.AddOption(productInventory_2);
+
         MethodMenuItem productInventory_3 = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
         productInventory_3.AttachObserver(new ViewStockInAllBranchesButton());
         productInventory.AddOption(productInventory_3);
+
         main.AddOption(productInventory);
 
         // Manage Customers - sub
         SubMenuItem manageCustomers = new SubMenuItem("Manage Customers");
-        MethodMenuItem manageCustomers_1 = new MethodMenuItem("Add New Customer"); //MethodMenuItem
-        manageCustomers_1.AttachObserver(new testingButton()); //!!!change!!!
-        manageCustomers.AddOption(manageCustomers_1);
+
         MethodMenuItem manageCustomers_2 = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
         manageCustomers_2.AttachObserver(new testingButton()); //!!!change!!! //manageCustomers_3 might answer this
         manageCustomers.AddOption(manageCustomers_2);
+
         MethodMenuItem manageCustomers_3 = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
         manageCustomers_3.AttachObserver(new ViewAllCustomersButton());
         manageCustomers.AddOption(manageCustomers_3);
         main.AddOption(manageCustomers);
+
 
         // Manage Sales Analytics Reports - sub
         SubMenuItem manageReports = new SubMenuItem("View Sales Statistics (all branches)");
         MethodMenuItem manageReports_1 = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
         manageReports_1.AttachObserver(new testingButton()); //!!!change!!!
         manageReports.AddOption(manageReports_1);
+
         MethodMenuItem manageReports_2 = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
         manageReports_2.AttachObserver(new testingButton()); //!!!change!!!
         manageReports.AddOption(manageReports_2);
+
         MethodMenuItem manageReports_3 = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
         manageReports_3.AttachObserver(new testingButton()); //!!!change!!!
         manageReports.AddOption(manageReports_3);
         main.AddOption(manageReports);
+
 
         // Manage Chat - sub
         SubMenuItem manageChat = new SubMenuItem("Open Chat");
