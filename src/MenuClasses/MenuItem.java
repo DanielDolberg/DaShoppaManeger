@@ -1,5 +1,7 @@
 package MenuClasses;
 
+import java.io.IOException;
+
 public abstract class MenuItem {
 
     //every MenuClasses.MenuItem will have a title that will be displayed on screen.
@@ -31,8 +33,7 @@ public abstract class MenuItem {
         Previous = previous;
     }
 
-    public void ActivateMenuItem()
-    {
+    public void ActivateMenuItem() throws IOException {
 
     }
 }

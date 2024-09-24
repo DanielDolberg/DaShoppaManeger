@@ -5,10 +5,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import MainClass.Main;
 
+import java.io.IOException;
+
 public class ViewAllStockInThisBranchButton  implements IMethodObserver
 {
-    public void Invoke()
-    {
+    public void Invoke() throws IOException {
         // read from JSON, make an array string of all customers
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
         JSONObject branches = jsonData.getJSONObject("branches");

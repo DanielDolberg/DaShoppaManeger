@@ -1,5 +1,7 @@
 package MenuClasses;
 
+import java.io.IOException;
+
 public class MethodMenuItem extends MenuItem {
 
     //an interface that will hold a method that is assigned to this MenuClasses.MenuItem
@@ -24,7 +26,7 @@ public class MethodMenuItem extends MenuItem {
 
     //invokes the method via m_Observer and activates the Previous MenuClasses.MenuItem
     @Override
-    public void ActivateMenuItem() {
+    public void ActivateMenuItem() throws IOException {
         m_Observer.Invoke();
         Previous.ActivateMenuItem();
     }

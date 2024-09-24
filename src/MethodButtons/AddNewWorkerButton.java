@@ -5,13 +5,14 @@ import MenuClasses.IMethodObserver;
 import Utilities.JSONHandler;
 import ShopClasses.WorkerClasses.JobRole;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class AddNewWorkerButton implements IMethodObserver {
 
     @Override
-    public void Invoke() {
+    public void Invoke() throws IOException {
         // Read existing data
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
         JSONArray workersArray = jsonData.getJSONArray("workers");

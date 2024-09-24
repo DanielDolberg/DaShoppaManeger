@@ -4,10 +4,11 @@ import Utilities.JSONHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 public class ViewAllCustomersButton implements IMethodObserver
 {
-    public void Invoke()
-    {
+    public void Invoke() throws IOException {
         // read from JSON, make an array string of all customers
         JSONArray customersArray = null;
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.CustomersJsonFilePath);

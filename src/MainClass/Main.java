@@ -6,8 +6,10 @@ import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
 import MenuClasses.SubMenuItem;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -18,21 +20,37 @@ public class Main {
     public static String workerBranch = "";
 
     public static void main(String[] args) {
-        // login screen
-        login();
+        try {
+            // login screen
+            login();
 
-        if(isUserLoggedIn)
-        {
-            // log in succeeded, open main menu
-            setUpShop();
-        }
-        else
-        {
-            System.out.println("You were locked out of your account, please try again later");
+            if (isUserLoggedIn) {
+                // log in succeeded, open main menu
+                setUpShop();
+            } else {
+                System.out.println("You were locked out of your account, please try again later");
+            }
+
+        } catch (JSONException e) {
+            // Raised when trying to access a field or element that doesn't exist
+            System.out.println("JSONException: " + e);
+        } catch (NullPointerException e) { //
+            // If the structure in the JSON file doesn't match what the code expects, accessing a non-existent object
+            System.out.println("NullPointerException: " + e);
+        } catch (ClassCastException e) { //
+            // Occurs when you attempt to cast a JSON value to an incompatible type.
+            // For example, trying to retrieve a string from a JSON field that holds an integer.
+            System.out.println("ClassCastException: " + e);
+        } catch (IOException e) {
+            // If the JSON file path does not exist or if there’s a problem reading the file (e.g., incorrect permissions).
+            System.out.println("File I/O Exception: " + e);
+        } catch (Exception e) {
+            // any Exception we didn't think of
+            System.out.println("Unexpected Exception: " + e);
         }
     }
 
-    public static void login() {
+    public static void login()  throws IOException, JSONException {
         JSONArray workersArray = null;
 
         // Load the JSON data from the file
@@ -88,8 +106,7 @@ public class Main {
         }
     }
 
-    public static void setUpShop()
-    {
+    public static void setUpShop() throws IOException {
         MainMenuItem main = new MainMenuItem("DeShooppa Manager MainClass.Main Menu");
 
         if (isAdmin) {
@@ -102,7 +119,7 @@ public class Main {
             registerNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
             manageWorkers.AddOption(registerNewAccount);
             MethodMenuItem updateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
-            updateAnAccount.AttachObserver(new testingButton()); //!!!change!!!
+            updateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
             manageWorkers.AddOption(updateAnAccount);
             main.AddOption(manageWorkers);
         }
@@ -124,10 +141,10 @@ public class Main {
         // Manage Customers - sub
         SubMenuItem manageCustomers = new SubMenuItem("Manage Customers");
         MethodMenuItem manageCustomers_1 = new MethodMenuItem("Add New Customer"); //MethodMenuItem
-        manageCustomers_1.AttachObserver(new testingButton()); //!!!change!!!
+        manageCustomers_1.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         manageCustomers.AddOption(manageCustomers_1);
         MethodMenuItem manageCustomers_2 = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
-        manageCustomers_2.AttachObserver(new testingButton()); //!!!change!!! //manageCustomers_3 might answer this
+        manageCustomers_2.AttachObserver(new testingButton_Delete_later()); //!!!change!!! //manageCustomers_3 might answer this
         manageCustomers.AddOption(manageCustomers_2);
         MethodMenuItem manageCustomers_3 = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
         manageCustomers_3.AttachObserver(new ViewAllCustomersButton());
@@ -137,13 +154,13 @@ public class Main {
         // Manage Sales Analytics Reports - sub
         SubMenuItem manageReports = new SubMenuItem("View Sales Statistics (all branches)");
         MethodMenuItem manageReports_1 = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
-        manageReports_1.AttachObserver(new testingButton()); //!!!change!!!
+        manageReports_1.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         manageReports.AddOption(manageReports_1);
         MethodMenuItem manageReports_2 = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
-        manageReports_2.AttachObserver(new testingButton()); //!!!change!!!
+        manageReports_2.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         manageReports.AddOption(manageReports_2);
         MethodMenuItem manageReports_3 = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
-        manageReports_3.AttachObserver(new testingButton()); //!!!change!!!
+        manageReports_3.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         manageReports.AddOption(manageReports_3);
         main.AddOption(manageReports);
 
@@ -160,7 +177,7 @@ public class Main {
         // Manage Logs - sub
         SubMenuItem manageLogs = new SubMenuItem("Manage Logs");
         MethodMenuItem manageLogs_1 = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
-        manageLogs_1.AttachObserver(new testingButton()); //!!!change!!!
+        manageLogs_1.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         manageLogs.AddOption(manageLogs_1);
         main.AddOption(manageLogs);
 

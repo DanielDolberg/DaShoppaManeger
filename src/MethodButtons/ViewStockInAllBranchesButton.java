@@ -5,9 +5,11 @@ import Utilities.JSONHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 public class ViewStockInAllBranchesButton  implements IMethodObserver
 {
-    public void Invoke() {
+    public void Invoke() throws IOException {
         // Read from JSON to get the branches
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
         JSONObject branches = jsonData.getJSONObject("branches");

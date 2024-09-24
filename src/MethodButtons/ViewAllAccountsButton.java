@@ -3,13 +3,17 @@ package MethodButtons;
 import Utilities.JSONHandler;
 import MenuClasses.IMethodObserver;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class ViewAllAccountsButton implements IMethodObserver {
     @Override
-    public void Invoke() {
+    public void Invoke() throws IOException, JSONException {
         // Read from JSON and create an array of all accounts
-        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
+        JSONObject jsonData;
+        jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
 
         // Get the array for workers (includes all accounts)
         JSONArray workersArray = jsonData.getJSONArray("workers");
@@ -24,7 +28,7 @@ public class ViewAllAccountsButton implements IMethodObserver {
     }
 
     // Method to print the accounts from a JSONArray
-    private static void printAccountsArray(JSONArray accountsArray) {
+    private static void printAccountsArray(JSONArray accountsArray) throws JSONException  {
         for (int i = 0; i < accountsArray.length(); i++) {
             JSONObject account = accountsArray.getJSONObject(i);
             String fullName = account.getString("fullName");

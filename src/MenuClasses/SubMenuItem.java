@@ -1,5 +1,6 @@
 package MenuClasses;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -26,7 +27,7 @@ public class SubMenuItem extends MenuItem {
 
     //displays the all the options in Options and allows the user to choose the one they want
     @Override
-    public void ActivateMenuItem() {
+    public void ActivateMenuItem() throws IOException {
         System.out.println("==" + Title + "==");
         System.out.println("-------------------");
 
