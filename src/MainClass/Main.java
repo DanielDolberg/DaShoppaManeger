@@ -73,10 +73,10 @@ public class Main {
             // Check users (workers/admins)
             for (int i = 0; i < workersArray.length(); i++) {
                 JSONObject user = workersArray.getJSONObject(i);
-                String UserNameInJson = user.getString("username");
+                String userNameInJson = user.getString("username");
                 String passwordInJson = user.getString("password");
 
-                if (userName.equals(UserNameInJson) && password.equals(passwordInJson)) {
+                if (userName.equals(userNameInJson) && password.equals(passwordInJson)) {
                     isUserLoggedIn = true;
                     String jobRole = user.getString("jobRole");
                     if (jobRole.equalsIgnoreCase("ShiftManager")) {
@@ -87,10 +87,10 @@ public class Main {
 
                     if (jobRole.equalsIgnoreCase("Admin")) {
                         isAdmin = true;
-                        System.out.println("Welcome " + UserNameInJson + ", you are logged in as an admin.");
+                        System.out.println("Welcome " + userNameInJson + ", you are logged in as an admin.");
                     } else {
                         isAdmin = false;
-                        System.out.println("Welcome " + UserNameInJson + ", you are logged in as a worker.");
+                        System.out.println("Welcome " + userNameInJson + ", you are logged in as a worker.");
                     }
                     break;
                 }
@@ -107,80 +107,80 @@ public class Main {
     }
 
     public static void setUpShop() throws IOException {
-        MainMenuItem main = new MainMenuItem("DeShooppa Manager MainClass.Main Menu");
+        MainMenuItem mainMenu = new MainMenuItem("DeShooppa Manager MainClass.Main Menu");
 
         if (isAdmin) {
             // Manage Workers (admin only) - sub
-            SubMenuItem manageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
-            MethodMenuItem viewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
-            viewAllAccounts.AttachObserver(new ViewAllAccountsButton());
-            manageWorkers.AddOption(viewAllAccounts);
-            MethodMenuItem registerNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem //DONE
-            registerNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
-            manageWorkers.AddOption(registerNewAccount);
-            MethodMenuItem updateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
-            updateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-            manageWorkers.AddOption(updateAnAccount);
-            main.AddOption(manageWorkers);
+            SubMenuItem subMenuManageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
+            MethodMenuItem methodViewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
+            methodViewAllAccounts.AttachObserver(new ViewAllAccountsButton());
+            subMenuManageWorkers.AddOption(methodViewAllAccounts);
+            MethodMenuItem methodRegisterNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem //DONE
+            methodRegisterNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
+            subMenuManageWorkers.AddOption(methodRegisterNewAccount);
+            MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
+            methodUpdateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+            subMenuManageWorkers.AddOption(methodUpdateAnAccount);
+            mainMenu.AddOption(subMenuManageWorkers);
         }
 
         // Manage Product Inventory - sub
-        SubMenuItem productInventory = new SubMenuItem("Manage Stock");
+        SubMenuItem subMenuProductInventory = new SubMenuItem("Manage Stock");
         if (!isAdmin) {
-            MethodMenuItem productInventory_1 = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //DONE
-            productInventory_1.AttachObserver(new ViewAllStockInThisBranchButton());
-            productInventory.AddOption(productInventory_1);
+            MethodMenuItem methodViewBranchStock = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //DONE
+            methodViewBranchStock.AttachObserver(new ViewAllStockInThisBranchButton());
+            subMenuProductInventory.AddOption(methodViewBranchStock);
         }
-        SubMenuItem productInventory_2 = new SubMenuItem("Perform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
-        productInventory.AddOption(productInventory_2);
-        MethodMenuItem productInventory_3 = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
-        productInventory_3.AttachObserver(new ViewStockInAllBranchesButton());
-        productInventory.AddOption(productInventory_3);
-        main.AddOption(productInventory);
+        SubMenuItem methodPerformPurchase = new SubMenuItem("Perform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
+        subMenuProductInventory.AddOption(methodPerformPurchase);
+        MethodMenuItem methodViewAllStock = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
+        methodViewAllStock.AttachObserver(new ViewStockInAllBranchesButton());
+        subMenuProductInventory.AddOption(methodViewAllStock);
+        mainMenu.AddOption(subMenuProductInventory);
 
         // Manage Customers - sub
-        SubMenuItem manageCustomers = new SubMenuItem("Manage Customers");
-        MethodMenuItem manageCustomers_1 = new MethodMenuItem("Add New Customer"); //MethodMenuItem
-        manageCustomers_1.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-        manageCustomers.AddOption(manageCustomers_1);
-        MethodMenuItem manageCustomers_2 = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
-        manageCustomers_2.AttachObserver(new testingButton_Delete_later()); //!!!change!!! //manageCustomers_3 might answer this
-        manageCustomers.AddOption(manageCustomers_2);
-        MethodMenuItem manageCustomers_3 = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
-        manageCustomers_3.AttachObserver(new ViewAllCustomersButton());
-        manageCustomers.AddOption(manageCustomers_3);
-        main.AddOption(manageCustomers);
+        SubMenuItem subMenuManageCustomers = new SubMenuItem("Manage Customers");
+        MethodMenuItem methodAddNewCustomer = new MethodMenuItem("Add New Customer"); //MethodMenuItem
+        methodAddNewCustomer.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        subMenuManageCustomers.AddOption(methodAddNewCustomer);
+        MethodMenuItem methodViewCustomerDetails = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
+        methodViewCustomerDetails.AttachObserver(new testingButton_Delete_later()); //!!!change!!! //methodViewAllCustomers might answer this
+        subMenuManageCustomers.AddOption(methodViewCustomerDetails);
+        MethodMenuItem methodViewAllCustomers = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
+        methodViewAllCustomers.AttachObserver(new ViewAllCustomersButton());
+        subMenuManageCustomers.AddOption(methodViewAllCustomers);
+        mainMenu.AddOption(subMenuManageCustomers);
 
         // Manage Sales Analytics Reports - sub
-        SubMenuItem manageReports = new SubMenuItem("View Sales Statistics (all branches)");
-        MethodMenuItem manageReports_1 = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
-        manageReports_1.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-        manageReports.AddOption(manageReports_1);
-        MethodMenuItem manageReports_2 = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
-        manageReports_2.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-        manageReports.AddOption(manageReports_2);
-        MethodMenuItem manageReports_3 = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
-        manageReports_3.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-        manageReports.AddOption(manageReports_3);
-        main.AddOption(manageReports);
+        SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
+        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
+        methodViewSalesBranch.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        subMenuManageReports.AddOption(methodViewSalesBranch);
+        MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
+        methodViewSalesByProduct.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        subMenuManageReports.AddOption(methodViewSalesByProduct);
+        MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
+        methodViewSalesByCategory.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        subMenuManageReports.AddOption(methodViewSalesByCategory);
+        mainMenu.AddOption(subMenuManageReports);
 
         // Manage Chat - sub
-        SubMenuItem manageChat = new SubMenuItem("Open Chat");
-        SubMenuItem manageChat_1 = new SubMenuItem("Start Chat with Another Employee"); //!!!MethodMenuItem or sub?
-        manageChat.AddOption(manageChat_1);
+        SubMenuItem subMenuManageChat = new SubMenuItem("Open Chat");
+        SubMenuItem methodStartChat = new SubMenuItem("Start Chat with Another Employee"); //!!!MethodMenuItem or sub?
+        subMenuManageChat.AddOption(methodStartChat);
         if (isShiftManager || isAdmin) {
-            SubMenuItem manageChat_2 = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!MethodMenuItem or sub?
-            manageChat.AddOption(manageChat_2);
+            SubMenuItem methodManagerJoinsChat = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!MethodMenuItem or sub?
+            subMenuManageChat.AddOption(methodManagerJoinsChat);
         }
-        main.AddOption(manageChat);
+        mainMenu.AddOption(subMenuManageChat);
 
         // Manage Logs - sub
-        SubMenuItem manageLogs = new SubMenuItem("Manage Logs");
-        MethodMenuItem manageLogs_1 = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
-        manageLogs_1.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-        manageLogs.AddOption(manageLogs_1);
-        main.AddOption(manageLogs);
+        SubMenuItem subMenuManageLogs = new SubMenuItem("Manage Logs");
+        MethodMenuItem methodViewLogs = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
+        methodViewLogs.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        subMenuManageLogs.AddOption(methodViewLogs);
+        mainMenu.AddOption(subMenuManageLogs);
 
-        main.ActivateMenuItem();
+        mainMenu.ActivateMenuItem();
     }
 }
