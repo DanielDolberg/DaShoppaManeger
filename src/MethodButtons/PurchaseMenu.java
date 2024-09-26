@@ -97,8 +97,19 @@ public class PurchaseMenu implements IMethodObserver {
         // Update item stock
         int stock = selectedItem.getInt("amountInStock");
         if (stock > 0) {
+            // Calculate final price after discount
+            double price = selectedItem.getDouble("price");
+            double discountPercent = getCustomerDiscount(customer);
+            double discountAmount = price * discountPercent;
+            double finalPrice = price - discountAmount;
+
+            // Reduce stock by 1
             selectedItem.put("amountInStock", stock - 1);
             System.out.println("Purchased " + selectedItem.getString("itemName") + " successfully.");
+            System.out.println("Original Price: " + price + ", Discount: " + (discountPercent * 100) + "%, Final Price: " + finalPrice);
+
+            // Update sales data
+            updateSalesData(workerBranch, selectedItem, 1, finalPrice); // Pass final price for sales data update
         } else {
             System.out.println("Item is out of stock.");
             return;
@@ -109,6 +120,62 @@ public class PurchaseMenu implements IMethodObserver {
 
         // Save updated inventory and customer status
         saveBranchItems(workerBranch, items);
+    }
+
+    private double getCustomerDiscount(JSONObject customer) {
+        String status = customer.getString("status");
+        switch (status) {
+            case "New":
+                return 0.0; // No discount for new customers
+            case "Returning":
+                return 0.2; // 20% discount for returning customers
+            case "VIP":
+                return 0.5; // 50% discount for VIP customers
+            default:
+                return 0.0; // Default no discount
+        }
+    }
+
+
+    private void updateSalesData(String branch, JSONObject item, int quantity, double finalPrice) throws IOException {
+        // Load the sales data
+        JSONObject salesData = JSONHandler.readFrom(JSONHandler.SalesJsonFilePath);
+        JSONObject branchSales = salesData.getJSONObject("branches").getJSONObject(branch);
+
+        // Find the item in sales
+        JSONArray salesItems = branchSales.getJSONArray("items");
+        String itemName = item.getString("itemName");
+        boolean itemFound = false;
+
+        // Loop through the sales items to find the corresponding item
+        for (int i = 0; i < salesItems.length(); i++) {
+            JSONObject salesItem = salesItems.getJSONObject(i);
+            if (salesItem.getString("itemName").equals(itemName)) {
+                // Update sales revenue and total amount sold
+                salesItem.put("revenue", salesItem.getDouble("revenue") + finalPrice);
+                branchSales.put("totalAmountSold", branchSales.getInt("totalAmountSold") + quantity);
+                branchSales.put("totalRevenue", branchSales.getDouble("totalRevenue") + finalPrice);
+                itemFound = true;
+                break;
+            }
+        }
+
+        // If the item wasn't found in sales, we need to add it
+        if (!itemFound) {
+            JSONObject newSalesItem = new JSONObject();
+            newSalesItem.put("itemName", itemName);
+            newSalesItem.put("price", item.getDouble("price")); // Original price for reference
+            newSalesItem.put("revenue", finalPrice); // Use final price as revenue
+            salesItems.put(newSalesItem); // Add new item to sales array
+
+            // Update total sold and revenue
+            branchSales.put("totalAmountSold", branchSales.getInt("totalAmountSold") + quantity);
+            branchSales.put("totalRevenue", branchSales.getDouble("totalRevenue") + finalPrice);
+        }
+
+        // Save updated sales data
+        JSONHandler.writeTo(JSONHandler.SalesJsonFilePath, salesData);
+        System.out.println("Sales data updated successfully.");
     }
 
 
@@ -168,5 +235,4 @@ public class PurchaseMenu implements IMethodObserver {
         JSONHandler.writeTo(JSONHandler.CustomersJsonFilePath, jsonData);
         System.out.println("Customer status updated successfully.");
     }
-
 }

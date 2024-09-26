@@ -186,15 +186,15 @@ public class Main {
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
 
         MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
-        methodViewSalesBranch.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        methodViewSalesBranch.AttachObserver(new ViewSalesForBranchButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesBranch);
 
         MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
-        methodViewSalesByProduct.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        methodViewSalesByProduct.AttachObserver(new ViewSalesByProductButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByProduct);
 
         MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
-        methodViewSalesByCategory.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        methodViewSalesByCategory.AttachObserver(new ViewSalesByCategoryButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByCategory);
 
         mainMenu.AddOption(subMenuManageReports);

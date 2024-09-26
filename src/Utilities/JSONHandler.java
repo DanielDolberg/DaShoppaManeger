@@ -15,6 +15,7 @@ public class JSONHandler {
     public final static String CustomersJsonFilePath = "J&sons/customers.json";
     public final static String StockJsonFilePath = "J&sons/stock.json";
     public final static String WorkersJsonFilePath = "J&sons/workers.json";
+    public final static String SalesJsonFilePath = "J&sons/sales.json";
 
     public static JSONObject readFrom(String JSONFilePath) throws IOException, JSONException {
         JSONObject jsonData;

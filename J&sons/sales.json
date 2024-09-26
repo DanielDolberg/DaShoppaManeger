@@ -1,56 +1,86 @@
-{
-  "branches": {
-    "Rishon Letzion": {
-      "totalAmountSold": 0,
-      "totalRevenue": 0,
-      "items": [
-        {
-          "itemName": "T-Shirt",
-          "price": 0,
-          "revenue": 0
-        },
-        {
-          "itemName": "Jeans",
-          "price": 0,
-          "revenue": 0
-        },
-        {
-          "itemName": "Jacket",
-          "price": 0,
-          "revenue": 0
-        },
-        {
-          "itemName": "Sweater",
-          "price": 0,
-          "revenue": 0
-        }
-      ]
-    },
+{"branches": {
     "Ashdod": {
-      "totalAmountSold": 0,
-      "totalRevenue": 0,
-      "items": [
-        {
-          "itemName": "T-Shirt",
-          "price": 0,
-          "revenue": 0
-        },
-        {
-          "itemName": "Jeans",
-          "price": 0,
-          "revenue": 0
-        },
-        {
-          "itemName": "Jacket",
-          "price": 0,
-          "revenue": 0
-        },
-        {
-          "itemName": "Sweater",
-          "price": 0,
-          "revenue": 0
-        }
-      ]
+        "totalAmountSold": 0,
+        "totalRevenue": 0,
+        "items": [
+            {
+                "itemName": "T-Shirt",
+                "revenue": 0,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Jeans",
+                "revenue": 0,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Jacket",
+                "revenue": 0,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Sweater",
+                "revenue": 0,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Sandals",
+                "revenue": 0,
+                "price": 0,
+                "category": "Footwear"
+            },
+            {
+                "itemName": "Sunglasses",
+                "revenue": 0,
+                "price": 0,
+                "category": "Accessories"
+            }
+        ]
+    },
+    "Rishon Letzion": {
+        "totalAmountSold": 2,
+        "totalRevenue": 74.985,
+        "items": [
+            {
+                "itemName": "T-Shirt",
+                "revenue": 74.985,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Jeans",
+                "revenue": 0,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Jacket",
+                "revenue": 0,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Sweater",
+                "revenue": 0,
+                "price": 0,
+                "category": "Apparel"
+            },
+            {
+                "itemName": "Sneakers",
+                "revenue": 0,
+                "price": 0,
+                "category": "Footwear"
+            },
+            {
+                "itemName": "Cap",
+                "revenue": 0,
+                "price": 0,
+                "category": "Accessories"
+            }
+        ]
     }
-  }
-}
+}}
