@@ -1,34 +1,56 @@
-{"sales": [
-  {
-    "branch": "Rishon Letzion",
-    "worker": "Aiden Kaminsky",
-    "customer": "John Doe",
-    "status": "VIP",
-    "itemName": "T-Shirt",
-    "amount": 1
-  },
-  {
-    "branch": "Rishon Letzion",
-    "worker": "Aiden Kaminsky",
-    "customer": "John Doe",
-    "status": "VIP",
-    "itemName": "T-Shirt",
-    "amount": 1
-  },
-  {
-    "branch": "Ashdod",
-    "worker": "shashy",
-    "customer": "John Doe",
-    "status": "VIP",
-    "itemName": "T-Shirt",
-    "amount": 1
-  },
-  {
-    "branch": "Ashdod",
-    "worker": "shashy",
-    "customer": "John Doe",
-    "status": "VIP",
-    "itemName": "T-Shirt",
-    "amount": 1
+{
+  "branches": {
+    "Rishon Letzion": {
+      "totalAmountSold": 0,
+      "totalRevenue": 0,
+      "items": [
+        {
+          "itemName": "T-Shirt",
+          "amountSold": 0,
+          "revenue": 0
+        },
+        {
+          "itemName": "Jeans",
+          "amountSold": 0,
+          "revenue": 0
+        },
+        {
+          "itemName": "Jacket",
+          "amountSold": 0,
+          "revenue": 0
+        },
+        {
+          "itemName": "Sweater",
+          "amountSold": 0,
+          "revenue": 0
+        }
+      ]
+    },
+    "Ashdod": {
+      "totalAmountSold": 0,
+      "totalRevenue": 0,
+      "items": [
+        {
+          "itemName": "T-Shirt",
+          "amountSold": 0,
+          "revenue": 0
+        },
+        {
+          "itemName": "Jeans",
+          "amountSold": 0,
+          "revenue": 0
+        },
+        {
+          "itemName": "Jacket",
+          "amountSold": 0,
+          "revenue": 0
+        },
+        {
+          "itemName": "Sweater",
+          "amountSold": 0,
+          "revenue": 0
+        }
+      ]
+    }
   }
-]}
+}

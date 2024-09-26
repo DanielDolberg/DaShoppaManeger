@@ -1,5 +1,6 @@
 package MainClass;
 
+import Logs.LogManager;
 import MethodButtons.*;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
@@ -179,7 +180,9 @@ public class Main {
 
         mainMenu.AddOption(subMenuManageCustomers);
 
+
         // Manage Sales Analytics Reports - sub
+
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
 
         MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
@@ -195,6 +198,7 @@ public class Main {
         subMenuManageReports.AddOption(methodViewSalesByCategory);
 
         mainMenu.AddOption(subMenuManageReports);
+
 
         // Manage Chat - sub
         SubMenuItem subMenuManageChat = new SubMenuItem("Open Chat");
