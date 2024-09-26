@@ -20,6 +20,7 @@ public class Main {
     public static boolean isShiftManager = false;
     public static String workerBranch = "";
     public static JSONObject theWorkerThatIsLoggedIn;
+    public static String loggedInUsersName = "";
 
     private static final String bigErrorMessage = "A big error happened, please contact support";
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
@@ -99,6 +100,7 @@ public class Main {
                     }
 
                     theWorkerThatIsLoggedIn = user;
+                    loggedInUsersName = userNameInJson;
                     workerBranch = user.getString("branchName");
 
                     if (jobRole.equalsIgnoreCase("Admin")) {
@@ -201,6 +203,7 @@ public class Main {
 
 
         // Manage Chat - sub
+        /*
         SubMenuItem subMenuManageChat = new SubMenuItem("Open Chat");
 
         SubMenuItem methodStartChat = new SubMenuItem("Start Chat with Another Employee"); //!!!MethodMenuItem or sub?
@@ -209,8 +212,11 @@ public class Main {
             SubMenuItem methodManagerJoinsChat = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!MethodMenuItem or sub?
             subMenuManageChat.AddOption(methodManagerJoinsChat);
         }
+        */
 
-        mainMenu.AddOption(subMenuManageChat);
+        MethodMenuItem startChat = new MethodMenuItem("openChat"); //!!!MethodMenuItem or sub?
+        startChat.AttachObserver(new IOpenChatButton());
+        mainMenu.AddOption(startChat);
 
         // Manage Logs - sub
         SubMenuItem subMenuManageLogs = new SubMenuItem("Manage Logs");
