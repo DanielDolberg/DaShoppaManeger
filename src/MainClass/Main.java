@@ -18,6 +18,8 @@ public class Main {
     public static boolean isAdmin = false;
     public static boolean isShiftManager = false;
     public static String workerBranch = "";
+    public static JSONObject theWorkerThatIsLoggedIn;
+
     private static final String bigErrorMessage = "A big error happened, please contact support";
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
 
@@ -95,6 +97,7 @@ public class Main {
                         isShiftManager = true;
                     }
 
+                    theWorkerThatIsLoggedIn = user;
                     workerBranch = user.getString("branchName");
 
                     if (jobRole.equalsIgnoreCase("Admin")) {
@@ -124,73 +127,94 @@ public class Main {
         if (isAdmin) {
             // Manage Workers (admin only) - sub
             SubMenuItem subMenuManageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
+
             MethodMenuItem methodViewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
             methodViewAllAccounts.AttachObserver(new ViewAllAccountsButton());
             subMenuManageWorkers.AddOption(methodViewAllAccounts);
+
             MethodMenuItem methodRegisterNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem //DONE
             methodRegisterNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
             subMenuManageWorkers.AddOption(methodRegisterNewAccount);
+
             MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
             methodUpdateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
             subMenuManageWorkers.AddOption(methodUpdateAnAccount);
+
             mainMenu.AddOption(subMenuManageWorkers);
         }
 
         // Manage Product Inventory - sub
         SubMenuItem subMenuProductInventory = new SubMenuItem("Manage Stock");
+
         if (!isAdmin) {
             MethodMenuItem methodViewBranchStock = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //DONE
             methodViewBranchStock.AttachObserver(new ViewAllStockInThisBranchButton());
             subMenuProductInventory.AddOption(methodViewBranchStock);
         }
-        SubMenuItem methodPerformPurchase = new SubMenuItem("Perform a Purchase on behalf of a Customer"); //!!!MethodMenuItem or sub ?
+
+        MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer"); //MethodMenuItem
+        methodPerformPurchase.AttachObserver(new PurchaseMenu());
         subMenuProductInventory.AddOption(methodPerformPurchase);
+
         MethodMenuItem methodViewAllStock = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
         methodViewAllStock.AttachObserver(new ViewStockInAllBranchesButton());
         subMenuProductInventory.AddOption(methodViewAllStock);
+
         mainMenu.AddOption(subMenuProductInventory);
 
         // Manage Customers - sub
         SubMenuItem subMenuManageCustomers = new SubMenuItem("Manage Customers");
+
         MethodMenuItem methodAddNewCustomer = new MethodMenuItem("Add New Customer"); //MethodMenuItem
         methodAddNewCustomer.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageCustomers.AddOption(methodAddNewCustomer);
+
         MethodMenuItem methodViewCustomerDetails = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
         methodViewCustomerDetails.AttachObserver(new testingButton_Delete_later()); //!!!change!!! //methodViewAllCustomers might answer this
         subMenuManageCustomers.AddOption(methodViewCustomerDetails);
+
         MethodMenuItem methodViewAllCustomers = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
         methodViewAllCustomers.AttachObserver(new ViewAllCustomersButton());
         subMenuManageCustomers.AddOption(methodViewAllCustomers);
+
         mainMenu.AddOption(subMenuManageCustomers);
 
         // Manage Sales Analytics Reports - sub
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
+
         MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
         methodViewSalesBranch.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesBranch);
+
         MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
         methodViewSalesByProduct.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByProduct);
+
         MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
         methodViewSalesByCategory.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByCategory);
+
         mainMenu.AddOption(subMenuManageReports);
 
         // Manage Chat - sub
         SubMenuItem subMenuManageChat = new SubMenuItem("Open Chat");
+
         SubMenuItem methodStartChat = new SubMenuItem("Start Chat with Another Employee"); //!!!MethodMenuItem or sub?
         subMenuManageChat.AddOption(methodStartChat);
         if (isShiftManager || isAdmin) {
             SubMenuItem methodManagerJoinsChat = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!MethodMenuItem or sub?
             subMenuManageChat.AddOption(methodManagerJoinsChat);
         }
+
         mainMenu.AddOption(subMenuManageChat);
 
         // Manage Logs - sub
         SubMenuItem subMenuManageLogs = new SubMenuItem("Manage Logs");
+
         MethodMenuItem methodViewLogs = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
         methodViewLogs.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageLogs.AddOption(methodViewLogs);
+
         mainMenu.AddOption(subMenuManageLogs);
 
         mainMenu.ActivateMenuItem();

@@ -24,7 +24,6 @@ public class SubMenuItem extends MenuItem {
         BackMessage = "Go Back";
     }
 
-
     //displays the all the options in Options and allows the user to choose the one they want
     @Override
     public void ActivateMenuItem() throws IOException {
