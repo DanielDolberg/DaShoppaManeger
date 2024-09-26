@@ -166,13 +166,13 @@ public class Main {
         // Manage Customers - sub
         SubMenuItem subMenuManageCustomers = new SubMenuItem("Manage Customers");
 
-        MethodMenuItem methodAddNewCustomer = new MethodMenuItem("Add New Customer"); //MethodMenuItem
-        methodAddNewCustomer.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-        subMenuManageCustomers.AddOption(methodAddNewCustomer);
+//        MethodMenuItem methodAddNewCustomer = new MethodMenuItem("Add New Customer"); //MethodMenuItem
+//        methodAddNewCustomer.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+//        subMenuManageCustomers.AddOption(methodAddNewCustomer);
 
-        MethodMenuItem methodViewCustomerDetails = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
-        methodViewCustomerDetails.AttachObserver(new testingButton_Delete_later()); //!!!change!!! //methodViewAllCustomers might answer this
-        subMenuManageCustomers.AddOption(methodViewCustomerDetails);
+//        MethodMenuItem methodViewCustomerDetails = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
+//        methodViewCustomerDetails.AttachObserver(new testingButton_Delete_later()); //!!!change!!! //methodViewAllCustomers might answer this
+//        subMenuManageCustomers.AddOption(methodViewCustomerDetails);
 
         MethodMenuItem methodViewAllCustomers = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
         methodViewAllCustomers.AttachObserver(new ViewAllCustomersButton());

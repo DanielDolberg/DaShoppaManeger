@@ -1,52 +1,46 @@
-{
-  "branches": {
-    "Rishon Letzion": {
-      "items": [
+{"branches": {
+    "Ashdod": {"items": [
         {
-          "itemName": "T-Shirt",
-          "amountSold": 49.99,
-          "amountInStock": 8
+            "itemName": "T-Shirt",
+            "price": 49.99,
+            "amountInStock": 6
         },
         {
-          "itemName": "Jeans",
-          "amountSold": 199.99,
-          "amountInStock": 5
+            "itemName": "Jeans",
+            "price": 199.99,
+            "amountInStock": 2
         },
         {
-          "itemName": "Jacket",
-          "amountSold": 349.99,
-          "amountInStock": 2
+            "itemName": "Jacket",
+            "price": 349.99,
+            "amountInStock": 1
         },
         {
-          "itemName": "Sweater",
-          "amountSold": 79.99,
-          "amountInStock": 7
+            "itemName": "Sweater",
+            "price": 79.99,
+            "amountInStock": 10
         }
-      ]
-    },
-    "Ashdod": {
-      "items": [
+    ]},
+    "Rishon Letzion": {"items": [
         {
-          "itemName": "T-Shirt",
-          "amountSold": 49.99,
-          "amountInStock": 6
+            "itemName": "T-Shirt",
+            "price": 49.99,
+            "amountInStock": 4
         },
         {
-          "itemName": "Jeans",
-          "amountSold": 199.99,
-          "amountInStock": 3
+            "itemName": "Jeans",
+            "price": 199.99,
+            "amountInStock": 5
         },
         {
-          "itemName": "Jacket",
-          "amountSold": 349.99,
-          "amountInStock": 1
+            "itemName": "Jacket",
+            "price": 349.99,
+            "amountInStock": 2
         },
         {
-          "itemName": "Sweater",
-          "amountSold": 79.99,
-          "amountInStock": 10
+            "itemName": "Sweater",
+            "price": 79.99,
+            "amountInStock": 7
         }
-      ]
-    }
-  }
-}
+    ]}
+}}

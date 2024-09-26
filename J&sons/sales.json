@@ -6,22 +6,22 @@
       "items": [
         {
           "itemName": "T-Shirt",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         },
         {
           "itemName": "Jeans",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         },
         {
           "itemName": "Jacket",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         },
         {
           "itemName": "Sweater",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         }
       ]
@@ -32,22 +32,22 @@
       "items": [
         {
           "itemName": "T-Shirt",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         },
         {
           "itemName": "Jeans",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         },
         {
           "itemName": "Jacket",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         },
         {
           "itemName": "Sweater",
-          "amountSold": 0,
+          "price": 0,
           "revenue": 0
         }
       ]

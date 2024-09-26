@@ -1,15 +1,19 @@
 package MethodButtons;
+
+import MainClass.Main;
 import MenuClasses.IMethodObserver;
-//import ShopClasses.CustomerClasses.CustomerManager;
 import ShopClasses.CustomerClasses.CustomerManager;
 import Utilities.JSONHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
-//import java.io.FileWriter;
+
 import java.io.IOException;
 import java.util.Scanner;
 
+import static MainClass.Main.workerBranch;
+
 public class PurchaseMenu implements IMethodObserver {
+
     @Override
     public void Invoke() {
         Scanner scanner = new Scanner(System.in);
@@ -23,12 +27,12 @@ public class PurchaseMenu implements IMethodObserver {
             if (customer == null) {
                 // If customer does not exist, prompt to add new customer
                 System.out.println("Customer not found.");
-                System.out.println("Would you like to make new customer? yes / no");
+                System.out.println("Would you like to make a new customer? yes / no");
                 String answer = scanner.nextLine();
-                if(answer.equals("no")) {
+                if (answer.equalsIgnoreCase("no")) {
                     return;
                 }
-                System.out.println(" Please enter details to add a new customer:");
+                System.out.println("Please enter details to add a new customer:");
                 System.out.print("Full Name: ");
                 String fullName = scanner.nextLine();
                 System.out.print("Phone Number: ");
@@ -54,28 +58,40 @@ public class PurchaseMenu implements IMethodObserver {
     }
 
     private void processPurchase(JSONObject customer) throws IOException {
-        System.out.println("Perform a Purchase on behalf of " + customer.getString("fullName"));
+        System.out.println("Perform a purchase on behalf of " + customer.getString("fullName") + " who is a " + customer.getString("status") + " customer.");
         Scanner scanner = new Scanner(System.in);
 
         // Select branch and item to purchase
-        JSONObject allBranchs = getBranchs();
-        JSONArray allBranchsNames = new JSONArray(allBranchs.keySet());
-        System.out.println("Select branch:");
-        for (int i = 0; i < allBranchsNames.length(); i++) {
-            System.out.println((i + 1) + ". " + allBranchsNames.getString(i));
-        }
-        // # System.out.println("Select branch (1. Rishon Letzion, 2. Ashdod): ");
-        int branchChoice = scanner.nextInt();
-        scanner.nextLine();  // Clear buffer
-        String branch = allBranchsNames.getString(branchChoice);
+        JSONObject branches = getBranches();
+        if (workerBranch.equals("All")) {
+            // If workerBranch is "All", prompt the user to select a branch
+            System.out.println("Select a branch:");
+            String[] branchNames = JSONObject.getNames(branches);
+            for (int i = 0; i < branchNames.length; i++) {
+                System.out.println((i + 1) + ". " + branchNames[i]);
+            }
 
-        // Fetch items from the branch
-        // # JSONArray items = getBranchItems(branch);
-        JSONArray items = allBranchs.getJSONArray(branch);
+            int branchChoice = scanner.nextInt() - 1;
+            scanner.nextLine(); // Clear buffer
+            if (branchChoice < 0 || branchChoice >= branchNames.length) {
+                System.out.println("Invalid branch selection!");
+                return;
+            }
+            workerBranch = branchNames[branchChoice]; // Set the selected branch
+        }
+
+        // Proceed to get items from the selected branch
+        JSONArray items = branches.getJSONObject(workerBranch).getJSONArray("items");
         displayItems(items);
 
         System.out.println("Enter item number to purchase: ");
         int itemIndex = scanner.nextInt() - 1;
+        scanner.nextLine();  // Clear buffer
+        if (itemIndex < 0 || itemIndex >= items.length()) {
+            System.out.println("Invalid item number!");
+            return;
+        }
+
         JSONObject selectedItem = items.getJSONObject(itemIndex);
 
         // Update item stock
@@ -92,39 +108,30 @@ public class PurchaseMenu implements IMethodObserver {
         updateCustomerStatus(customer);
 
         // Save updated inventory and customer status
-        saveBranchItems(branch, items);
-        CustomerManager.addCustomer(customer);  // Update customer data
+        saveBranchItems(workerBranch, items);
     }
 
-    private JSONObject getBranchs() throws IOException {
+
+    private JSONObject getBranches() throws IOException {
         // Read from JSON and create an array
-        JSONObject jsonData;
-        jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
+        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
         return jsonData.getJSONObject("branches");
     }
 
-    private JSONArray getBranchItems(String branchName) throws IOException {
-        // Read from JSON and create an array
-        JSONObject jsonData;
-        jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
-
-        // Get the array for
-        JSONObject branchesArray = jsonData.getJSONObject("branches");
-        JSONArray branchNameArray = branchesArray.getJSONArray(branchName);
-        return branchNameArray;
-        //
-        //String content = new String(Files.readAllBytes(Paths.get(JSONHandler.StockJsonFilePath)));
-        //JSONObject json = new JSONObject(content);
-        //System.out.println("testing 1.");
-        //return json.getJSONObject("branches").getJSONArray(branchName);
-    }
-
     private void saveBranchItems(String branchName, JSONArray items) throws IOException {
-        // Similar to the inventory loading, this function saves the updated branch items
+        // Read the current stock file
+        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
+
+        // Update the branch items
+        jsonData.getJSONObject("branches").getJSONObject(branchName).put("items", items);
+
+        // Write the updated data back to the file
+        JSONHandler.writeTo(JSONHandler.StockJsonFilePath, jsonData);
+        System.out.println("Branch items updated successfully.");
     }
 
     private void displayItems(JSONArray items) {
-        System.out.println("testing 2.");
+        System.out.println("Available items:");
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
             System.out.println((i + 1) + ". " + item.getString("itemName") +
@@ -133,12 +140,33 @@ public class PurchaseMenu implements IMethodObserver {
         }
     }
 
-    private void updateCustomerStatus(JSONObject customer) {
+    private void updateCustomerStatus(JSONObject customer) throws IOException {
         String currentStatus = customer.getString("status");
+
+        // Update the status based on current state
         if (currentStatus.equals("New")) {
             customer.put("status", "Returning");
         } else if (currentStatus.equals("Returning")) {
             customer.put("status", "VIP");
         }
+
+        // Save the updated customer data to the file
+        JSONArray customers = JSONHandler.readFrom(JSONHandler.CustomersJsonFilePath).getJSONArray("clients");
+
+        // Find the customer in the array and update them
+        for (int i = 0; i < customers.length(); i++) {
+            JSONObject existingCustomer = customers.getJSONObject(i);
+            if (existingCustomer.getString("ID").equals(customer.getString("ID"))) {
+                customers.put(i, customer);  // Update the customer data
+                break;
+            }
+        }
+
+        // Write the updated customers list back to the JSON file
+        JSONObject jsonData = new JSONObject();
+        jsonData.put("clients", customers);
+        JSONHandler.writeTo(JSONHandler.CustomersJsonFilePath, jsonData);
+        System.out.println("Customer status updated successfully.");
     }
+
 }
