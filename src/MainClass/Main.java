@@ -155,7 +155,7 @@ public class Main {
             subMenuProductInventory.AddOption(methodViewBranchStock);
         }
 
-        MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer"); //MethodMenuItem
+        MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer"); //MethodMenuItem //DONE
         methodPerformPurchase.AttachObserver(new PurchaseMenu());
         subMenuProductInventory.AddOption(methodPerformPurchase);
 
@@ -187,15 +187,15 @@ public class Main {
 
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
 
-        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
+        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem //DONE
         methodViewSalesBranch.AttachObserver(new ViewSalesForBranchButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesBranch);
 
-        MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
+        MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem //DONE
         methodViewSalesByProduct.AttachObserver(new ViewSalesByProductButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByProduct);
 
-        MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
+        MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem //DONE
         methodViewSalesByCategory.AttachObserver(new ViewSalesByCategoryButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByCategory);
 
