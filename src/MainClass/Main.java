@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-
+// hope it works
     public static boolean isUserLoggedIn = false;
     public static boolean isAdmin = false;
     public static boolean isShiftManager = false;
