@@ -1,5 +1,6 @@
 package MainClass;
 
+import Logs.LogManager;
 import MethodButtons.*;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
@@ -165,7 +166,7 @@ public class Main {
         // Manage Logs - sub
         SubMenuItem manageLogs = new SubMenuItem("Manage Logs");
         MethodMenuItem manageLogs_1 = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
-        manageLogs_1.AttachObserver(new testingButton()); //!!!change!!!
+        manageLogs_1.AttachObserver(new LogManager());
         manageLogs.AddOption(manageLogs_1);
         main.AddOption(manageLogs);
 
