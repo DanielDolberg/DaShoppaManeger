@@ -1,6 +1,7 @@
 package Utilities;
 
 import ShopClasses.CustomerClasses.Customer;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,23 +16,19 @@ public class JSONHandler {
     public final static String StockJsonFilePath = "J&sons/stock.json";
     public final static String WorkersJsonFilePath = "J&sons/workers.json";
 
-    public static JSONObject readFrom(String JSONFilePath){
+    public static JSONObject readFrom(String JSONFilePath) throws IOException, JSONException {
         JSONObject jsonData;
-        try {
-            // Read the file content into a String
-            String content = new String(Files.readAllBytes(Paths.get(JSONFilePath)));
 
-            // Parse the content into a JSONObject
-            jsonData = new JSONObject(content);
+        // Read the file content into a String
+        String content = new String(Files.readAllBytes(Paths.get(JSONFilePath)));
 
-        } catch (IOException e) {
-            System.err.println("IO Exception!");
-            jsonData = new JSONObject();
-        }
+        // Parse the content into a JSONObject
+        jsonData = new JSONObject(content);
+
         return jsonData;
     }
 
-    public static void writeTo(String JSONFilePath, JSONObject infoToWriteToFile){
+    public static void writeTo(String JSONFilePath, JSONObject infoToWriteToFile) throws IOException, JSONException {
 
         new Thread(new Runnable()
             {
@@ -42,8 +39,8 @@ public class JSONHandler {
                             FileWriter file = new FileWriter(JSONFilePath);
                             file.write(infoToWriteToFile.toString(4));
                             file.close();
-                        } catch (Exception ex) {
-                            System.err.println(ex);
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
                         }
                     }
                 }

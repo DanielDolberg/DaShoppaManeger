@@ -5,13 +5,16 @@ import MenuClasses.IMethodObserver;
 import Utilities.JSONHandler;
 import ShopClasses.WorkerClasses.JobRole;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import static MainClass.Main.littleErrorMessage;
 
 public class AddNewWorkerButton implements IMethodObserver {
 
     @Override
-    public void Invoke() {
+    public void Invoke() throws IOException {
         // Read existing data
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
         JSONArray workersArray = jsonData.getJSONArray("workers");
@@ -112,9 +115,16 @@ public class AddNewWorkerButton implements IMethodObserver {
         // Append new worker to workersArray
         workersArray.put(newWorker);
 
-        // Write the updated JSON back to file
-        JSONHandler.writeTo(JSONHandler.WorkersJsonFilePath, jsonData);
+        try {
+            // Write the updated JSON back to file
+            JSONHandler.writeTo(JSONHandler.WorkersJsonFilePath, jsonData);
 
-        System.out.println("Worker successfully added.");
+            System.out.println("Worker successfully added.");
+        } catch (IOException e) {
+            System.out.println(littleErrorMessage);
+            System.out.println("File I/O Exception: " + e);
+            System.err.println("File I/O Exception: " + e);
+            return; // Go back to the menu
+        }
     }
 }

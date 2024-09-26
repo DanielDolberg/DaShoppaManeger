@@ -3,28 +3,46 @@ package MethodButtons;
 import Utilities.JSONHandler;
 import MenuClasses.IMethodObserver;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+
+import static MainClass.Main.littleErrorMessage;
 
 public class ViewAllAccountsButton implements IMethodObserver {
     @Override
-    public void Invoke() {
-        // Read from JSON and create an array of all accounts
-        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
+    public void Invoke() throws IOException, JSONException {
+        try {
+            // Read from JSON and create an array of all accounts
+            JSONObject jsonData;
+            jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
 
-        // Get the array for workers (includes all accounts)
-        JSONArray workersArray = jsonData.getJSONArray("workers");
+            // Get the array for workers (includes all accounts)
+            JSONArray workersArray = jsonData.getJSONArray("workers");
 
-        // Print table header
-        System.out.printf("%-20s %-6s %-16s %-15s %-18s %-15s %-12s %-20s%n",
-                "Full Name", "ID", "Phone Number", "Account Number", "Branch Name", "Job Role", "Username", "Password");
-        System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+            // Print table header
+            System.out.printf("%-20s %-6s %-16s %-15s %-18s %-15s %-12s %-20s%n",
+                    "Full Name", "ID", "Phone Number", "Account Number", "Branch Name", "Job Role", "Username", "Password");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------");
 
-        // Print each worker's information in table format
-        printAccountsArray(workersArray);
+            // Print each worker's information in table format
+            printAccountsArray(workersArray);
+        } catch (IOException e) {
+            System.out.println(littleErrorMessage);
+            System.out.println("File I/O Exception: " + e);
+            System.err.println("File I/O Exception: " + e);
+            return; // Go back to the menu
+        } catch (JSONException e) {
+            System.out.println(littleErrorMessage);
+            System.out.println("JSONException: " + e);
+            System.err.println("JSONException: " + e);
+            return; // Go back to the menu
+        }
     }
 
     // Method to print the accounts from a JSONArray
-    private static void printAccountsArray(JSONArray accountsArray) {
+    private static void printAccountsArray(JSONArray accountsArray) throws JSONException  {
         for (int i = 0; i < accountsArray.length(); i++) {
             JSONObject account = accountsArray.getJSONObject(i);
             String fullName = account.getString("fullName");
