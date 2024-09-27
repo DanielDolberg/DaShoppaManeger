@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import MainClass.Main;
+import org.json.*;
 
 public class ChatServer {
     private static Set<PrintWriter> clientWriters = new HashSet<>();
@@ -45,19 +46,8 @@ public class ChatServer {
                 while ((message = in.readLine()) != null) {
                     System.out.println("Received: " + message);
                     synchronized (clientWriters) {
-                        Date currentTime = new Date();
-
-                        // Define the desired time format (HH:mm:ss)
-                        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-
-                        // Format the current time
-                        String formattedTime = formatter.format(currentTime);
-                        String nameOfSender = ExtractNameFromMessage(message);
-                        String messageWithOutName = ReturnStringWithoutName(message);
-
-
                         for (PrintWriter writer : clientWriters) {
-                            writer.println("["+formattedTime+": " + nameOfSender + "]: " +messageWithOutName); // Broadcast message to all clients
+                            writer.println(extractMessageFromGivenJson(message)); // Broadcast message to all clients
                         }
                     }
                 }
@@ -101,5 +91,19 @@ public class ChatServer {
             return message.toString();
         }
 
+        public static String extractMessageFromGivenJson(String messageInJsonForm)
+        {
+            JSONObject json = new JSONObject(messageInJsonForm);
+
+            System.out.println(json);
+
+            String[] jsonInArr =  new String[]{
+                    json.getString("name"),
+                    json.getString("message"),
+                    json.getString("time_sent")
+            };
+
+            return "["+jsonInArr[2]+": " + jsonInArr[0] + "]: " + jsonInArr[1];
+        }
     }
 }

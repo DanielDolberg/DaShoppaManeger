@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import MainClass.Main;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import MainClass.Main;
+import org.json.*;
 
 public class ChatClient {
     private static final String SERVER_ADDRESS = "localhost"; // Change this to server IP if needed
@@ -18,6 +21,7 @@ public class ChatClient {
     private static PrintWriter out;
     private static BufferedReader in;
     private static ChatClient chatClient = null;
+
     // GUI Components
     private static JFrame frame;
     private static JTextArea messageArea;
@@ -36,7 +40,7 @@ public class ChatClient {
 
     private static void setupGUI() {
         // Create frame
-        frame = new JFrame("Chat Client");
+        frame = new JFrame(name + " ClientAndServerSideClasses");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
 
@@ -66,10 +70,11 @@ public class ChatClient {
     }
 
     private static void sendMessage() {
-        String namePreFix = "{" + name +"}";
+
         String message = messageField.getText();
+
         if (message != null && !message.trim().isEmpty()) {
-            out.println(namePreFix + message); // Send message to server
+            out.println(returnStringAsMessageJson(message)); // Send message to server
             messageField.setText(""); // Clear input field
         }
     }
@@ -99,6 +104,28 @@ public class ChatClient {
             JOptionPane.showMessageDialog(frame, "Failed to connect to the server", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+
+    }
+
+    public static String returnStringAsMessageJson(String message)
+    {
+        Date currentTime = new Date();
+
+        // Define the desired time format (HH:mm:ss)
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+
+        // Format the current time
+        String formattedTime = formatter.format(currentTime);
+
+        String finalMessage =  "{" +
+                "'type':'text'," +
+                "'name':" + '"' + name + '"' + "," +
+                "'message':" + '"' + message + '"' + "," +
+                "time_sent:" + '"' + formattedTime + '"' +
+                "}";
+
+        return finalMessage;
+
     }
 
 }
