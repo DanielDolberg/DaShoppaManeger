@@ -6,11 +6,12 @@ import MenuClasses.IMethodObserver;
 import ShopClasses.CustomerClasses.CustomerManager;
 import Utilities.JSONHandler;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.regex.Pattern;
 import java.io.IOException;
 import java.util.Scanner;
-
+import static MainClass.Main.littleErrorMessage;
 import static MainClass.Main.logManager;
 import static MainClass.Main.workerBranch;
 
@@ -39,7 +40,6 @@ public class PurchaseMenu implements IMethodObserver {
                 if (answer.equalsIgnoreCase("no")) {
                     return;
                 }
-
                 customer = createNewCustomer(customerId);
                 LogManager logManager = Main.logManager;
                 logManager.WriteToFile("INFO: New customer registered with ID: " + customerId + " by User: " + Main.loggedInUsersName);
@@ -50,6 +50,13 @@ public class PurchaseMenu implements IMethodObserver {
 
         } catch (IOException e) {
             System.out.println("Error handling customer data: " + e.getMessage());
+            System.out.println(littleErrorMessage);
+            System.err.println("File I/O Exception: " + e);
+            return; // Go back to the menu
+        } catch (JSONException e) {
+            System.out.println(littleErrorMessage);
+            System.err.println("JSONException: " + e);
+            return;
         }
     }
 
@@ -92,12 +99,13 @@ public class PurchaseMenu implements IMethodObserver {
     }
 
 
-    private void processPurchase(JSONObject customer) throws IOException {
+    private void processPurchase(JSONObject customer) throws IOException, JSONException {
         System.out.println("Perform a purchase on behalf of " + customer.getString("fullName") + " who is a " + customer.getString("status") + " customer.");
         Scanner scanner = new Scanner(System.in);
 
         // Select branch and item to purchase
         JSONObject branches = getBranches();
+
         if (workerBranch.equals("All")) {
             // If workerBranch is "All", prompt the user to select a branch
             System.out.println("Select a branch:");
@@ -184,7 +192,7 @@ public class PurchaseMenu implements IMethodObserver {
         }
     }
 
-    private void updateSalesData(String branch, JSONObject item, int quantity, double finalPrice) throws IOException {
+    private void updateSalesData(String branch, JSONObject item, int quantity, double finalPrice) throws IOException, JSONException {
         // Load the sales data
         JSONObject salesData = JSONHandler.readFrom(JSONHandler.SalesJsonFilePath);
         JSONObject branchSales = salesData.getJSONObject("branches").getJSONObject(branch);
@@ -226,13 +234,13 @@ public class PurchaseMenu implements IMethodObserver {
     }
 
 
-    private JSONObject getBranches() throws IOException {
+    private JSONObject getBranches() throws IOException, JSONException {
         // Read from JSON and create an array
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
         return jsonData.getJSONObject("branches");
     }
 
-    private void saveBranchItems(String branchName, JSONArray items) throws IOException {
+    private void saveBranchItems(String branchName, JSONArray items) throws IOException, JSONException {
         // Read the current stock file
         JSONObject jsonData = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
 
@@ -244,7 +252,7 @@ public class PurchaseMenu implements IMethodObserver {
         System.out.println("Branch items updated successfully.");
     }
 
-    private void displayItems(JSONArray items) {
+    private void displayItems(JSONArray items) throws JSONException {
         System.out.println("Available items:");
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
@@ -254,7 +262,7 @@ public class PurchaseMenu implements IMethodObserver {
         }
     }
 
-    private void updateCustomerStatus(JSONObject customer) throws IOException {
+    private void updateCustomerStatus(JSONObject customer) throws IOException, JSONException {
         String currentStatus = customer.getString("status");
 
         // Update the status based on current state
