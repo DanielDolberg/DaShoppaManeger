@@ -40,5 +40,17 @@
         "fullName": "Tonny Ton",
         "ID": "000000000",
         "status": "VIP"
+    },
+    {
+        "phoneNumber": "+972-22-2222222",
+        "fullName": "Customer Customio",
+        "ID": "102938475",
+        "status": "VIP"
+    },
+    {
+        "phoneNumber": "+972-99-9999999",
+        "fullName": "Karen Karenio",
+        "ID": "111111111",
+        "status": "Returning"
     }
 ]}

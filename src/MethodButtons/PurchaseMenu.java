@@ -1,5 +1,6 @@
 package MethodButtons;
 
+import Logs.LogManager;
 import MainClass.Main;
 import MenuClasses.IMethodObserver;
 import ShopClasses.CustomerClasses.CustomerManager;
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
 import java.io.IOException;
 import java.util.Scanner;
 
+import static MainClass.Main.logManager;
 import static MainClass.Main.workerBranch;
 
 public class PurchaseMenu implements IMethodObserver {
@@ -18,18 +20,14 @@ public class PurchaseMenu implements IMethodObserver {
     public void Invoke() {
         Scanner scanner = new Scanner(System.in);
 
-        // Get customer ID
-        //System.out.println("Enter Customer ID: ");
-        //String customerId = scanner.nextLine();
-        // Validate Customer ID
         String customerId;
         do {
-            System.out.println("Enter Customer ID (alphanumeric, no spaces): ");
+            System.out.println("Enter Customer ID (exactly 9 digits): ");
             customerId = scanner.nextLine();
-            if (!Pattern.matches("[a-zA-Z0-9]+", customerId)) {
-                System.out.println("Invalid Customer ID. Please enter only alphanumeric characters without spaces.");
+            if (!Pattern.matches("\\d{9}", customerId)) {
+                System.out.println("Invalid Customer ID. Please enter exactly 9 digits.");
             }
-        } while (!Pattern.matches("[a-zA-Z0-9]+", customerId));
+        } while (!Pattern.matches("\\d{9}", customerId));
 
         try {
             JSONObject customer = CustomerManager.findCustomerByID(customerId);
@@ -43,6 +41,8 @@ public class PurchaseMenu implements IMethodObserver {
                 }
 
                 customer = createNewCustomer(customerId);
+                LogManager logManager = Main.logManager;
+                logManager.WriteToFile("INFO: New customer registered with ID: " + customerId + " by User: " + Main.loggedInUsersName);
             }
 
             // Proceed with purchase
@@ -51,28 +51,6 @@ public class PurchaseMenu implements IMethodObserver {
         } catch (IOException e) {
             System.out.println("Error handling customer data: " + e.getMessage());
         }
-    }
-
-    private JSONObject createNewCustomer_no_input_check(String customerId) throws IOException {
-        JSONObject newCustomer = new JSONObject();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Please enter details to add a new customer:");
-        System.out.print("Full Name: ");
-        String fullName = scanner.nextLine();
-        System.out.print("Phone Number: ");
-        String phoneNumber = scanner.nextLine();
-
-        //JSONObject newCustomer = new JSONObject();
-        newCustomer.put("fullName", fullName);
-        newCustomer.put("ID", customerId);
-        newCustomer.put("phoneNumber", phoneNumber);
-        newCustomer.put("status", "New");
-
-        // Add the new customer to JSON
-        CustomerManager.addCustomer(newCustomer);
-
-        return newCustomer;
     }
 
     private JSONObject createNewCustomer(String customerId) throws IOException {
@@ -167,6 +145,15 @@ public class PurchaseMenu implements IMethodObserver {
             // Reduce stock by 1
             selectedItem.put("amountInStock", stock - 1);
             System.out.println("Purchased " + selectedItem.getString("itemName") + " successfully.");
+            // Create log entry
+            String logEntry = String.format("PURCHASE: %s by Customer ID: %s - Price: %.2f at Branch: %s",
+                    selectedItem.getString("itemName"),
+                    customer.getString("fullName"),
+                    finalPrice,
+                    workerBranch);
+
+            // Log the purchase
+            logManager.WriteToFile(logEntry);
             System.out.println("Original Price: " + price + ", Discount: " + (discountPercent * 100) + "%, Final Price: " + finalPrice);
 
             // Update sales data

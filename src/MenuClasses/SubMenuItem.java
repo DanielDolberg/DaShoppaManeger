@@ -2,6 +2,8 @@ package MenuClasses;
 
 import java.io.IOException;
 import Logs.LogManager;
+import MainClass.Main;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -49,10 +51,6 @@ public class SubMenuItem extends MenuItem {
         } else {
             //write to a log file
             String title= Options.get(selection - 1).getTitle();
-            if(title == "Register New Account") { //log register workers
-                LogManager logManager = new LogManager();
-                logManager.WriteToFile("register new worker");
-            }
             Options.get(selection - 1).ActivateMenuItem(); //activate the Menu Item the user selected
         }
     }
