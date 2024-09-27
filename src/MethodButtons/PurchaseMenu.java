@@ -85,12 +85,16 @@ public class PurchaseMenu implements IMethodObserver {
         displayItems(items);
 
         System.out.println("Enter item number to purchase: ");
-        int itemIndex = scanner.nextInt() - 1;
-        scanner.nextLine();  // Clear buffer
-        if (itemIndex < 0 || itemIndex >= items.length()) {
-            System.out.println("Invalid item number!");
-            return;
-        }
+        int itemIndex;
+
+        do {
+            itemIndex = scanner.nextInt() - 1;
+            scanner.nextLine();  // Clear buffer
+
+            if (itemIndex < 0 || itemIndex >= items.length()) {
+                System.out.println("Invalid item number! Please enter a valid item number:");
+            }
+        } while (itemIndex < 0 || itemIndex >= items.length());
 
         JSONObject selectedItem = items.getJSONObject(itemIndex);
 

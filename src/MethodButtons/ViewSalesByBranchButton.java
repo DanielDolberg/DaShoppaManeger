@@ -5,7 +5,7 @@ import MenuClasses.IMethodObserver;
 import Utilities.JSONHandler;
 import java.io.IOException;
 
-public class ViewSalesForBranchButton implements IMethodObserver {
+public class ViewSalesByBranchButton implements IMethodObserver {
 
     @Override
     public void Invoke() throws IOException {

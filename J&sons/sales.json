@@ -1,7 +1,7 @@
 {"branches": {
     "Ashdod": {
-        "totalAmountSold": 0,
-        "totalRevenue": 0,
+        "totalAmountSold": 2,
+        "totalRevenue": 369.992,
         "items": [
             {
                 "itemName": "T-Shirt",
@@ -29,21 +29,21 @@
             },
             {
                 "itemName": "Sandals",
-                "revenue": 0,
+                "revenue": 119.992,
                 "price": 0,
                 "category": "Footwear"
             },
             {
                 "itemName": "Sunglasses",
-                "revenue": 0,
+                "revenue": 250,
                 "price": 0,
                 "category": "Accessories"
             }
         ]
     },
     "Rishon Letzion": {
-        "totalAmountSold": 2,
-        "totalRevenue": 74.985,
+        "totalAmountSold": 4,
+        "totalRevenue": 354.96500000000003,
         "items": [
             {
                 "itemName": "T-Shirt",
@@ -53,7 +53,7 @@
             },
             {
                 "itemName": "Jeans",
-                "revenue": 0,
+                "revenue": 199.99,
                 "price": 0,
                 "category": "Apparel"
             },
@@ -65,7 +65,7 @@
             },
             {
                 "itemName": "Sweater",
-                "revenue": 0,
+                "revenue": 79.99,
                 "price": 0,
                 "category": "Apparel"
             },

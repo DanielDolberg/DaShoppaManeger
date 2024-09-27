@@ -1,6 +1,5 @@
 package MainClass;
 
-import Logs.LogManager;
 import MethodButtons.*;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
@@ -187,8 +186,8 @@ public class Main {
 
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
 
-        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem //DONE
-        methodViewSalesBranch.AttachObserver(new ViewSalesForBranchButton()); //!!!change!!!
+        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales by Branch"); //MethodMenuItem //DONE
+        methodViewSalesBranch.AttachObserver(new ViewSalesByBranchButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesBranch);
 
         MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem //DONE
