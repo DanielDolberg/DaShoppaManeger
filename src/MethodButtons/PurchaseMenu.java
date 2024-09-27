@@ -6,7 +6,7 @@ import ShopClasses.CustomerClasses.CustomerManager;
 import Utilities.JSONHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import java.util.regex.Pattern;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -32,21 +32,8 @@ public class PurchaseMenu implements IMethodObserver {
                 if (answer.equalsIgnoreCase("no")) {
                     return;
                 }
-                System.out.println("Please enter details to add a new customer:");
-                System.out.print("Full Name: ");
-                String fullName = scanner.nextLine();
-                System.out.print("Phone Number: ");
-                String phoneNumber = scanner.nextLine();
 
-                JSONObject newCustomer = new JSONObject();
-                newCustomer.put("fullName", fullName);
-                newCustomer.put("ID", customerId);
-                newCustomer.put("phoneNumber", phoneNumber);
-                newCustomer.put("status", "New");
-
-                // Add the new customer to JSON
-                CustomerManager.addCustomer(newCustomer);
-                customer = newCustomer;
+                customer = createNewCustomer(customerId);
             }
 
             // Proceed with purchase
@@ -56,6 +43,67 @@ public class PurchaseMenu implements IMethodObserver {
             System.out.println("Error handling customer data: " + e.getMessage());
         }
     }
+
+    private JSONObject createNewCustomer_no_input_check(String customerId) throws IOException {
+        JSONObject newCustomer = new JSONObject();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please enter details to add a new customer:");
+        System.out.print("Full Name: ");
+        String fullName = scanner.nextLine();
+        System.out.print("Phone Number: ");
+        String phoneNumber = scanner.nextLine();
+
+        //JSONObject newCustomer = new JSONObject();
+        newCustomer.put("fullName", fullName);
+        newCustomer.put("ID", customerId);
+        newCustomer.put("phoneNumber", phoneNumber);
+        newCustomer.put("status", "New");
+
+        // Add the new customer to JSON
+        CustomerManager.addCustomer(newCustomer);
+
+        return newCustomer;
+    }
+
+    private JSONObject createNewCustomer(String customerId) throws IOException {
+        JSONObject newCustomer = new JSONObject();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please enter details to add a new customer:");
+
+        // Validate full name
+        String fullName;
+        do {
+            System.out.print("Full Name: ");
+            fullName = scanner.nextLine();
+            if (!Pattern.matches("[a-zA-Z ]+", fullName) || fullName.isEmpty()) {
+                System.out.println("Invalid full name. Please enter only letters and spaces.");
+            }
+        } while (!Pattern.matches("[a-zA-Z ]+", fullName) || fullName.isEmpty());
+
+        // Validate phone number (e.g., must be in format +972-XX-XXXXXXX)
+        String phoneNumber;
+        do {
+            System.out.print("Phone Number (format: +972-XX-XXXXXXX): ");
+            phoneNumber = scanner.nextLine();
+            if (!Pattern.matches("\\+972-\\d{2}-\\d{7}", phoneNumber)) {
+                System.out.println("Invalid phone number format. Please follow the format +972-XX-XXXXXXX.");
+            }
+        } while (!Pattern.matches("\\+972-\\d{2}-\\d{7}", phoneNumber));
+
+        // Add validated data to newCustomer JSONObject
+        newCustomer.put("fullName", fullName);
+        newCustomer.put("ID", customerId);
+        newCustomer.put("phoneNumber", phoneNumber);
+        newCustomer.put("status", "New");
+
+        // Add the new customer to JSON
+        CustomerManager.addCustomer(newCustomer);
+
+        return newCustomer;
+    }
+
 
     private void processPurchase(JSONObject customer) throws IOException {
         System.out.println("Perform a purchase on behalf of " + customer.getString("fullName") + " who is a " + customer.getString("status") + " customer.");
@@ -139,7 +187,6 @@ public class PurchaseMenu implements IMethodObserver {
                 return 0.0; // Default no discount
         }
     }
-
 
     private void updateSalesData(String branch, JSONObject item, int quantity, double finalPrice) throws IOException {
         // Load the sales data
