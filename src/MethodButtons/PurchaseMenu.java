@@ -19,8 +19,17 @@ public class PurchaseMenu implements IMethodObserver {
         Scanner scanner = new Scanner(System.in);
 
         // Get customer ID
-        System.out.println("Enter Customer ID: ");
-        String customerId = scanner.nextLine();
+        //System.out.println("Enter Customer ID: ");
+        //String customerId = scanner.nextLine();
+        // Validate Customer ID
+        String customerId;
+        do {
+            System.out.println("Enter Customer ID (alphanumeric, no spaces): ");
+            customerId = scanner.nextLine();
+            if (!Pattern.matches("[a-zA-Z0-9]+", customerId)) {
+                System.out.println("Invalid Customer ID. Please enter only alphanumeric characters without spaces.");
+            }
+        } while (!Pattern.matches("[a-zA-Z0-9]+", customerId));
 
         try {
             JSONObject customer = CustomerManager.findCustomerByID(customerId);
