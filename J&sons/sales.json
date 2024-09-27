@@ -1,7 +1,7 @@
 {"branches": {
     "Ashdod": {
-        "totalAmountSold": 0,
-        "totalRevenue": 0,
+        "totalAmountSold": 5,
+        "totalRevenue": 644.969,
         "items": [
             {
                 "itemName": "T-Shirt",
@@ -23,27 +23,27 @@
             },
             {
                 "itemName": "Sweater",
-                "revenue": 0,
+                "revenue": 79.99,
                 "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Sandals",
-                "revenue": 0,
+                "revenue": 314.97900000000004,
                 "price": 0,
                 "category": "Footwear"
             },
             {
                 "itemName": "Sunglasses",
-                "revenue": 0,
+                "revenue": 250,
                 "price": 0,
                 "category": "Accessories"
             }
         ]
     },
     "Rishon Letzion": {
-        "totalAmountSold": 2,
-        "totalRevenue": 74.985,
+        "totalAmountSold": 7,
+        "totalRevenue": 698.945,
         "items": [
             {
                 "itemName": "T-Shirt",
@@ -53,7 +53,7 @@
             },
             {
                 "itemName": "Jeans",
-                "revenue": 0,
+                "revenue": 399.98,
                 "price": 0,
                 "category": "Apparel"
             },
@@ -65,19 +65,19 @@
             },
             {
                 "itemName": "Sweater",
-                "revenue": 0,
+                "revenue": 79.99,
                 "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Sneakers",
-                "revenue": 0,
+                "revenue": 104,
                 "price": 0,
                 "category": "Footwear"
             },
             {
                 "itemName": "Cap",
-                "revenue": 0,
+                "revenue": 39.99,
                 "price": 0,
                 "category": "Accessories"
             }

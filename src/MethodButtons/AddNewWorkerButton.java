@@ -1,4 +1,6 @@
 package MethodButtons;
+import Logs.LogManager;
+import MainClass.Main;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import MenuClasses.IMethodObserver;
@@ -120,6 +122,8 @@ public class AddNewWorkerButton implements IMethodObserver {
             JSONHandler.writeTo(JSONHandler.WorkersJsonFilePath, jsonData);
 
             System.out.println("Worker successfully added.");
+            LogManager logManager = Main.logManager;
+            logManager.WriteToFile("INFO: New worker registered with ID: " + newID + " by User: " + Main.loggedInUsersName);
         } catch (IOException e) {
             System.out.println(littleErrorMessage);
             System.err.println("File I/O Exception: " + e);

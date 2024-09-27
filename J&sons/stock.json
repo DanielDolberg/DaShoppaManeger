@@ -18,7 +18,17 @@
         {
             "itemName": "Sweater",
             "price": 79.99,
-            "amountInStock": 10
+            "amountInStock": 9
+        },
+        {
+            "itemName": "Sandals",
+            "price": 149.99,
+            "amountInStock": 4
+        },
+        {
+            "itemName": "Sunglasses",
+            "price": 250,
+            "amountInStock": 3
         }
     ]},
     "Rishon Letzion": {"items": [
@@ -30,7 +40,7 @@
         {
             "itemName": "Jeans",
             "price": 199.99,
-            "amountInStock": 5
+            "amountInStock": 3
         },
         {
             "itemName": "Jacket",
@@ -40,7 +50,17 @@
         {
             "itemName": "Sweater",
             "price": 79.99,
-            "amountInStock": 7
+            "amountInStock": 6
+        },
+        {
+            "itemName": "Sneakers",
+            "price": 130,
+            "amountInStock": 6
+        },
+        {
+            "itemName": "Cap",
+            "price": 39.99,
+            "amountInStock": 2
         }
     ]}
 }}

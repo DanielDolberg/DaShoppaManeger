@@ -14,6 +14,11 @@ public class LogManager  implements IMethodObserver {
     private File logFile;
     private String timestamp;
 
+    @Override
+    public void Invoke() {
+        ReadFromFile();
+    }
+
     public LogManager() {
         this.fileName = "app.log";
         this.directoryPath = "Logs";
@@ -69,13 +74,12 @@ public class LogManager  implements IMethodObserver {
         }
     }
     public void ReadFromFile() {
-
         Scanner scanner = new Scanner(System.in);
         // Validate full name
         String logsDate;
         do {
             System.out.println("Enter logs date (format: yyyy-MM-dd) for example: 2024-09-23");
-            logsDate= scanner.nextLine();
+            logsDate = scanner.nextLine();
             if (!Pattern.matches("\\d{4}-\\d{2}-\\d{2}", logsDate)) {
                 System.out.println("Invalid logs date format. Please follow the format yyyy-MM-dd.");
             }
@@ -84,14 +88,21 @@ public class LogManager  implements IMethodObserver {
         // Read from the log file
         try {
             boolean found = false;
+            boolean headingPrinted = false;  // To ensure heading is printed only once
             Scanner s = new Scanner(logFile);
-            while(s.hasNextLine())
-            {
+            while (s.hasNextLine()) {
                 String line = s.nextLine();
                 if (line.startsWith("[" + logsDate + " ")) {
-                    // Extract the log message by splitting the line
-                    String logMessage = line.substring(line.indexOf("]") + 2);  // Get everything after "] "
-                    System.out.println(logMessage);  // Print the extracted log message
+                    if (!headingPrinted) {
+                        System.out.println("Printing logs of date: " + logsDate);
+                        headingPrinted = true;
+                    }
+                    // Extract only the time part
+                    String timePart = line.substring(line.indexOf(" ") + 1, line.indexOf("]"));
+                    String logMessage = line.substring(line.indexOf("]") + 2);  // Extracts the log message
+
+                    // Print the extracted time and log message
+                    System.out.println("[" + timePart + "] " + logMessage);
                     found = true;
                 }
             }
@@ -103,9 +114,5 @@ public class LogManager  implements IMethodObserver {
         } catch (FileNotFoundException e) {
             System.out.println("Log file not found: " + e.getMessage());
         }
-    }
-    @Override
-    public void Invoke() {
-        ReadFromFile();
     }
 }

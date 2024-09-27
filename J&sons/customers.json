@@ -30,9 +30,27 @@
         "status": "VIP"
     },
     {
-        "phoneNumber": "",
-        "fullName": "    Scanner scanner = new Scanner(System.in);",
-        "ID": "private void processPurchase(JSONObject customer) throws IOException {",
-        "status": "New"
+        "phoneNumber": "+972-51-1111111",
+        "fullName": "John Snow",
+        "ID": "444444444",
+        "status": "VIP"
+    },
+    {
+        "phoneNumber": "+972-54-5303941",
+        "fullName": "Tonny Ton",
+        "ID": "000000000",
+        "status": "VIP"
+    },
+    {
+        "phoneNumber": "+972-22-2222222",
+        "fullName": "Customer Customio",
+        "ID": "102938475",
+        "status": "VIP"
+    },
+    {
+        "phoneNumber": "+972-99-9999999",
+        "fullName": "Karen Karenio",
+        "ID": "111111111",
+        "status": "Returning"
     }
 ]}

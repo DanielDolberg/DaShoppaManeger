@@ -21,6 +21,7 @@ public class Main {
     public static String workerBranch = "";
     public static JSONObject theWorkerThatIsLoggedIn;
     public static String loggedInUsersName = "";
+    public static LogManager logManager = new LogManager();
 
     private static final String bigErrorMessage = "A big error happened, please contact support";
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
@@ -134,9 +135,9 @@ public class Main {
             methodRegisterNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
             subMenuManageWorkers.AddOption(methodRegisterNewAccount);
 
-            MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
-            methodUpdateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-            subMenuManageWorkers.AddOption(methodUpdateAnAccount);
+//            MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
+//            methodUpdateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+//            subMenuManageWorkers.AddOption(methodUpdateAnAccount);
 
             mainMenu.AddOption(subMenuManageWorkers);
         }
@@ -182,8 +183,8 @@ public class Main {
 
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
 
-        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem //DONE
-        methodViewSalesBranch.AttachObserver(new ViewSalesForBranchButton()); //!!!change!!!
+        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales by Branch"); //MethodMenuItem //DONE
+        methodViewSalesBranch.AttachObserver(new ViewSalesByBranchButton()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesBranch);
 
         MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem //DONE
@@ -217,7 +218,7 @@ public class Main {
         SubMenuItem subMenuManageLogs = new SubMenuItem("Manage Logs");
 
         MethodMenuItem methodViewLogs = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
-        methodViewLogs.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        methodViewLogs.AttachObserver(new LogManager()); //!!!change!!!
         subMenuManageLogs.AddOption(methodViewLogs);
 
         mainMenu.AddOption(subMenuManageLogs);

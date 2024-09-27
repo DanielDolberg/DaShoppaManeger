@@ -55,8 +55,18 @@
         "fullName": "Admin User",
         "branchName": "All",
         "jobRole": "Admin",
-        "ID": 0,
+        "ID": 6,
         "accountNumber": 1,
         "username": "admin"
+    },
+    {
+        "password": "10293847",
+        "phoneNumber": "+972-55-5555555",
+        "fullName": "Dan Levis",
+        "branchName": "All",
+        "jobRole": "Cashier",
+        "ID": 7,
+        "accountNumber": 777,
+        "username": "danny"
     }
 ]}

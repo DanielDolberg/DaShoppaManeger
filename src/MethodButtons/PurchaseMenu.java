@@ -1,5 +1,6 @@
 package MethodButtons;
 
+import Logs.LogManager;
 import MainClass.Main;
 import MenuClasses.IMethodObserver;
 import ShopClasses.CustomerClasses.CustomerManager;
@@ -10,8 +11,8 @@ import org.json.JSONObject;
 import java.util.regex.Pattern;
 import java.io.IOException;
 import java.util.Scanner;
-
 import static MainClass.Main.littleErrorMessage;
+import static MainClass.Main.logManager;
 import static MainClass.Main.workerBranch;
 
 public class PurchaseMenu implements IMethodObserver {
@@ -22,12 +23,12 @@ public class PurchaseMenu implements IMethodObserver {
 
         String customerId;
         do {
-            System.out.println("Enter Customer ID (alphanumeric, no spaces): ");
+            System.out.println("Enter Customer ID (exactly 9 digits): ");
             customerId = scanner.nextLine();
-            if (!Pattern.matches("[a-zA-Z0-9]+", customerId)) {
-                System.out.println("Invalid Customer ID. Please enter only alphanumeric characters without spaces.");
+            if (!Pattern.matches("\\d{9}", customerId)) {
+                System.out.println("Invalid Customer ID. Please enter exactly 9 digits.");
             }
-        } while (!Pattern.matches("[a-zA-Z0-9]+", customerId));
+        } while (!Pattern.matches("\\d{9}", customerId));
 
         try {
             JSONObject customer = CustomerManager.findCustomerByID(customerId);
@@ -40,6 +41,8 @@ public class PurchaseMenu implements IMethodObserver {
                     return;
                 }
                 customer = createNewCustomer(customerId);
+                LogManager logManager = Main.logManager;
+                logManager.WriteToFile("INFO: New customer registered with ID: " + customerId + " by User: " + Main.loggedInUsersName);
             }
 
             // Proceed with purchase
@@ -125,12 +128,16 @@ public class PurchaseMenu implements IMethodObserver {
         displayItems(items);
 
         System.out.println("Enter item number to purchase: ");
-        int itemIndex = scanner.nextInt() - 1;
-        scanner.nextLine();  // Clear buffer
-        if (itemIndex < 0 || itemIndex >= items.length()) {
-            System.out.println("Invalid item number!");
-            return;
-        }
+        int itemIndex;
+
+        do {
+            itemIndex = scanner.nextInt() - 1;
+            scanner.nextLine();  // Clear buffer
+
+            if (itemIndex < 0 || itemIndex >= items.length()) {
+                System.out.println("Invalid item number! Please enter a valid item number:");
+            }
+        } while (itemIndex < 0 || itemIndex >= items.length());
 
         JSONObject selectedItem = items.getJSONObject(itemIndex);
 
@@ -146,6 +153,15 @@ public class PurchaseMenu implements IMethodObserver {
             // Reduce stock by 1
             selectedItem.put("amountInStock", stock - 1);
             System.out.println("Purchased " + selectedItem.getString("itemName") + " successfully.");
+            // Create log entry
+            String logEntry = String.format("PURCHASE: %s by Customer ID: %s - Price: %.2f at Branch: %s",
+                    selectedItem.getString("itemName"),
+                    customer.getString("fullName"),
+                    finalPrice,
+                    workerBranch);
+
+            // Log the purchase
+            logManager.WriteToFile(logEntry);
             System.out.println("Original Price: " + price + ", Discount: " + (discountPercent * 100) + "%, Final Price: " + finalPrice);
 
             // Update sales data

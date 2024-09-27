@@ -30,12 +30,10 @@ public class ViewAllAccountsButton implements IMethodObserver {
             printAccountsArray(workersArray);
         } catch (IOException e) {
             System.out.println(littleErrorMessage);
-            System.out.println("File I/O Exception: " + e);
             System.err.println("File I/O Exception: " + e);
             return; // Go back to the menu
         } catch (JSONException e) {
             System.out.println(littleErrorMessage);
-            System.out.println("JSONException: " + e);
             System.err.println("JSONException: " + e);
             return; // Go back to the menu
         }
