@@ -1,7 +1,7 @@
 {"branches": {
     "Ashdod": {
-        "totalAmountSold": 2,
-        "totalRevenue": 369.992,
+        "totalAmountSold": 4,
+        "totalRevenue": 569.974,
         "items": [
             {
                 "itemName": "T-Shirt",
@@ -23,13 +23,13 @@
             },
             {
                 "itemName": "Sweater",
-                "revenue": 0,
+                "revenue": 79.99,
                 "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Sandals",
-                "revenue": 119.992,
+                "revenue": 239.984,
                 "price": 0,
                 "category": "Footwear"
             },

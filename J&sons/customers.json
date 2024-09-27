@@ -30,9 +30,15 @@
         "status": "VIP"
     },
     {
-        "phoneNumber": "+972-051-1111111",
+        "phoneNumber": "+972-51-1111111",
         "fullName": "John Snow",
-        "ID": "444444",
+        "ID": "444444444",
+        "status": "VIP"
+    },
+    {
+        "phoneNumber": "+972-54-5303941",
+        "fullName": "Tonny Ton",
+        "ID": "000000000",
         "status": "VIP"
     }
 ]}
