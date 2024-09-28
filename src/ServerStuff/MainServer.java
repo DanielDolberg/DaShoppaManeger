@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+import ShopClasses.WorkerClasses.JobRole;
 import Utilities.JSONHandler;
 import org.json.*;
 
@@ -15,6 +16,7 @@ public class MainServer {
     private static final Set<WorkerInNet> clientWriters = new HashSet<>();
     private static final Set<ChatRoom> chatRooms = new HashSet<>();
     private static Map<WorkerInNet, ChatRoom> whichWorkerInWhichRoom = new HashMap<>();
+
     private static JSONArray customers;
     private static JSONArray sales;
     private static JSONArray stock;
@@ -43,6 +45,16 @@ public class MainServer {
         }
 
         return null;
+    }
+
+    public static void NotifyWorkerTheyJoinedTheChat(WorkerInNet workerToNotif, ChatRoom chatRoom)
+    {
+        JSONObject notification = new JSONObject();
+
+        notification.put("type", "NOTIFY_USER_JOIN_CHAT");
+        notification.put("roomID", chatRoom.roomID);
+
+        workerToNotif.responseFromServer.println(notification);
     }
 
     private static void loadAllJsons() throws IOException
@@ -117,6 +129,9 @@ public class MainServer {
                 case "REQUEST_TO_START_OR_JOIN_CHAT":
                     handleRequestToJoinChat(json);
                     break;
+                case "NOTIFY_USER_LEFT_CHAT":
+                    handleUserLeavingChat(json);
+                    break;
             }
         }
 
@@ -139,6 +154,19 @@ public class MainServer {
             }
 
 
+        }
+
+        private void handleUserLeavingChat(JSONObject json)
+        {
+            long workerID = json.getLong("workerID");
+            long roomID = json.getLong("roomID");
+
+            WorkerInNet leavingWorker = getWorkerById(workerID);
+            ChatRoom room = whichWorkerInWhichRoom.get(leavingWorker);
+
+            room.chatterBugs.remove(leavingWorker);
+
+            room.letNextWorkerInQueueIn();
         }
 
         private void handleAuthenticationRequest(JSONObject json)
@@ -201,6 +229,7 @@ public class MainServer {
             WorkerInNet requestee =  getWorkerById(json.getLong("requestedUser"));
             WorkerInNet requester =  getWorkerById(json.getLong("requester"));
 
+            checkIfWorkerAlreadyisWaitingForRoomAndRemoveIfDoes(requestee);
 
             ChatRoom room =  whichWorkerInWhichRoom.get(requestee);
 
@@ -209,9 +238,10 @@ public class MainServer {
                 room = createNewRoom();
             }
 
-            if(room.chatterBugs.size() < 1 || requester.getJobRole().equals("ShiftManager") || requester.getJobRole().equals("Admin"))
+            if(room.chatterBugs.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin)
             {
-                room.chatterBugs.add(requestee);
+                whichWorkerInWhichRoom.put(requester,room);
+                room.chatterBugs.add(requester);
                 String response = "{ " +
                         "'type':'REQUEST_TO_JOIN_CHAT_ACCEPTED'," +
                         "'roomID':" + room.roomID +
@@ -221,8 +251,21 @@ public class MainServer {
             }
             else
             {
-                String response = "{ 'type':'REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD'}";
+                room.peopleInQueue.add(requester);
+                String response = "{ 'type':'REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD', 'position' :" +room.peopleInQueue.size() +"}";
                 worker.responseFromServer.println(response);
+            }
+        }
+
+        public static void checkIfWorkerAlreadyisWaitingForRoomAndRemoveIfDoes(WorkerInNet worker)
+        {
+            for (ChatRoom room : chatRooms)
+            {
+                if(room.peopleInQueue.contains(worker))
+                {
+                    room.peopleInQueue.remove(worker);
+                    break;
+                }
             }
         }
 
@@ -250,10 +293,12 @@ public class MainServer {
         }
     }
 
-    private static class ChatRoom
+    public static class ChatRoom
     {
         LinkedList<String> conversation;
         LinkedList<WorkerInNet> chatterBugs;
+        Queue<WorkerInNet> peopleInQueue;
+
         public static long numberOfRooms = 0;
         public long roomID;
 
@@ -264,6 +309,7 @@ public class MainServer {
 
             roomID = numberOfRooms;
             numberOfRooms++;
+            peopleInQueue = new LinkedList<>();
         }
 
         public void TakeMessage(JSONObject message)
@@ -279,6 +325,14 @@ public class MainServer {
                     writer.responseFromServer.println(sentObject); // Broadcast message to all clients
                     conversation.add(extractedMessage);
                 }
+            }
+        }
+
+        public void letNextWorkerInQueueIn()
+        {
+            if(!peopleInQueue.isEmpty())
+            {
+                 MainServer.NotifyWorkerTheyJoinedTheChat(peopleInQueue.poll(), this);
             }
         }
 

@@ -39,11 +39,14 @@ public class ConnectionToMainServer {
                     String incomingString;
                     while ((incomingString = in.readLine()) != null) {
                         JSONObject inToJson = new JSONObject(incomingString);
-                        System.out.println(inToJson);
+                        //System.out.println(inToJson);
                         synchronized (MuteEx) {
                             switch (inToJson.getString("type")) {
                                 case "RECEIVED_CHAT_MESSAGE":
                                     ReceiveTextMessage(inToJson);
+                                    break;
+                                case "NOTIFY_USER_JOIN_CHAT":
+                                    ChatClient.StartChat(inToJson.getLong("roomID"));
                                     break;
                                 default:
                                     incomingMessage = inToJson;
@@ -142,6 +145,11 @@ public class ConnectionToMainServer {
 
         if (response.getString("type").equals("REQUEST_TO_JOIN_CHAT_ACCEPTED")) {
             ChatClient.StartChat(response.getLong("roomID"));
+        }
+        else if(response.getString("type").equals("REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD"))
+        {
+            String msg = String.format("you are on hold, there are %d people in front of you",response.getInt("position"));
+            System.out.println(msg);
         }
     }
 

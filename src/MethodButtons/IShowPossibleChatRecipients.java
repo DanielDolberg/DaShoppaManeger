@@ -17,7 +17,7 @@ public class IShowPossibleChatRecipients implements IMethodObserver {
 
         for (String name : users.keySet())
         {
-            if(name.equals(Main.loggedInUsersName)) //skip this user
+            if(name.equals(Main.loggedInUser.getFullName())) //skip this user
                 continue;
 
             String title = String.format("%s [network id: %d]", name, users.get(name));
