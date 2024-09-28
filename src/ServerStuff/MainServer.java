@@ -272,7 +272,11 @@ public class MainServer {
             String extractedMessage = extractMessageFromGivenJson(message);
             synchronized (chatterBugs) {
                 for (WorkerInNet writer : chatterBugs) {
-                    writer.responseFromServer.println(extractedMessage); // Broadcast message to all clients
+                    JSONObject sentObject = new JSONObject();
+                    sentObject.put("type","RECEIVED_CHAT_MESSAGE");
+                    sentObject.put("text",extractedMessage);
+
+                    writer.responseFromServer.println(sentObject); // Broadcast message to all clients
                     conversation.add(extractedMessage);
                 }
             }

@@ -36,7 +36,7 @@ public class ChatClient {
         IDofRoom = RoomID;
         setupGUI();
         askServerForConvo();
-        start();
+        //start();
     }
 
     private static void setupGUI() {
@@ -94,6 +94,11 @@ public class ChatClient {
             ConnectionToMainServer.SentTextMessage(returnStringAsMessageJson(message)); // Send message to server
             messageField.setText(""); // Clear input field
         }
+    }
+
+    public static void AddMessage(String message)
+    {
+        messageArea.append(message + "\n");
     }
 
     private static void start() {
