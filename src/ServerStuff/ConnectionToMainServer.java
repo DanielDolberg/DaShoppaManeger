@@ -153,6 +153,16 @@ public class ConnectionToMainServer {
         }
     }
 
+    public static void CloseConnectionOfChat(long idOfRoom, long workerID)
+    {
+        JSONObject reportClosingMsg = new JSONObject();
+        reportClosingMsg.put("type", "NOTIFY_USER_LEFT_CHAT");
+        reportClosingMsg.put("roomID", idOfRoom);
+        reportClosingMsg.put("workerID", workerID);
+
+        out.println(reportClosingMsg);
+    }
+
     public static void ReceiveTextMessage(JSONObject message) {
 
         ChatClient.AddMessage(message.getString("text"));

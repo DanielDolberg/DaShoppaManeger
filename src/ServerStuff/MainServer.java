@@ -332,7 +332,9 @@ public class MainServer {
         {
             if(!peopleInQueue.isEmpty())
             {
-                 MainServer.NotifyWorkerTheyJoinedTheChat(peopleInQueue.poll(), this);
+                WorkerInNet includedWorker = peopleInQueue.poll();
+                MainServer.NotifyWorkerTheyJoinedTheChat(includedWorker, this);
+                chatterBugs.add(includedWorker);
             }
         }
 

@@ -9,8 +9,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import MainClass.Main;
+import org.json.JSONObject;
 
 public class ChatClient {
     private static final String SERVER_ADDRESS = "localhost"; // Change this to server IP if needed
@@ -33,16 +36,29 @@ public class ChatClient {
 
     public static void StartChat(long RoomID)
     {
-        IDofRoom = RoomID;
-        setupGUI();
-        askServerForConvo();
-        //start();
+        new Thread(()->{
+            IDofRoom = RoomID;
+            setupGUI();
+            askServerForConvo();
+        }).start();
     }
 
     private static void setupGUI() {
         // Create frame
         frame = new JFrame(name + " ClientAndServerSideClasses");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Override the default close behavior
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        // Add WindowListener for custom closing behavior
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                    ConnectionToMainServer.CloseConnectionOfChat(IDofRoom, Main.loggedInUser.getID()); // Custom method to close socket or cleanup
+                    frame.dispose(); // Close the window and release resources
+            }
+        });
+
         frame.setSize(400, 400);
 
         // Create message area (where chat messages appear)
@@ -150,5 +166,4 @@ public class ChatClient {
         return finalMessage;
 
     }
-
 }

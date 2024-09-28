@@ -22,14 +22,11 @@ public class IShowPossibleChatRecipients implements IMethodObserver {
 
             String title = String.format("%s [network id: %d]", name, users.get(name));
 
-            //MethodMenuItem callUpChat = new MethodMenuItem();
-
             pickAUserToChatWith.AddOption(new StartUpChatButton(title,users.get(name)));
         }
 
 
         pickAUserToChatWith.ActivateMenuItem();
-        //ChatClient.StartChat();
     }
 
 
