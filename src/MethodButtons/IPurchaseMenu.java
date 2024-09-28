@@ -1,6 +1,5 @@
 package MethodButtons;
 
-import MainClass.Main;
 import MenuClasses.IMethodObserver;
 import ShopClasses.CustomerClasses.CustomerManager;
 import Utilities.JSONHandler;
@@ -12,7 +11,7 @@ import java.util.Scanner;
 
 import static MainClass.Main.workerBranch;
 
-public class PurchaseMenu implements IMethodObserver {
+public class IPurchaseMenu implements IMethodObserver {
 
     @Override
     public void Invoke() {

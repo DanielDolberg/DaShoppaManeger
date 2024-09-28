@@ -4,12 +4,10 @@ import MainClass.Main;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -55,13 +53,14 @@ public class ConnectionToMainServer {
         return new JSONObject(response);
     }
 
-    public static String[] AskForConversation() throws IOException
+    public static String[] AskForConversationOfChat(long IDofRoom) throws IOException
     {
         LinkedList<String> convo = new LinkedList<>();
 
         String requestForConvo =
                 "{" +
-                        "'type' : 'REQUESTING_CONVERSATION'" +
+                        "'type' : 'REQUESTING_CONVERSATION'," +
+                        "'roomID':" + IDofRoom +
                 "}";
 
         String response = in.readLine();
@@ -101,5 +100,34 @@ public class ConnectionToMainServer {
         }
 
         return userList;
+    }
+
+    public static void StartChatWith(long ID) throws IOException
+    {
+        LinkedList<String> request = new LinkedList<>();
+
+        String requestJson =
+                "{" +
+                        "'type' : 'REQUEST_TO_START_OR_JOIN_CHAT'," +
+                        "'requestedUser':"+ ID + "," +
+                        "'requester' : " + Main.loggedInUser.getID() +
+                        "}";
+
+        out.println(requestJson);
+
+
+        String response = in.readLine();
+
+        JSONObject responseJson = new JSONObject(response);
+
+        if(responseJson.getString("type").equals("REQUEST_TO_JOIN_CHAT_ACCEPTED"))
+        {
+            ChatClient.StartChat(responseJson.getLong("roomID"));
+        }
+    }
+
+    public static void SentTextMessage(String Message)
+    {
+        out.println(Message);
     }
 }

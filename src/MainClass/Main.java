@@ -5,6 +5,7 @@ import ServerStuff.ConnectionToMainServer;
 import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
 import MenuClasses.SubMenuItem;
+import ShopClasses.WorkerClasses.Worker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,8 +18,8 @@ public class Main {
     public static boolean isAdmin = false;
     public static boolean isShiftManager = false;
     public static String workerBranch = "";
-    public static JSONObject theWorkerThatIsLoggedIn;
     public static String loggedInUsersName = "";
+    public static Worker loggedInUser = null;
 
     private static final String bigErrorMessage = "A big error happened, please contact support";
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
@@ -92,8 +93,10 @@ public class Main {
                     isShiftManager = true;
                 }
 
-                theWorkerThatIsLoggedIn = user;
                 loggedInUsersName = userName;
+                loggedInUser = new Worker();
+                loggedInUser.setInfoFromJson(user);
+
                 workerBranch = user.getString("branchName");
 
                 if (jobRole.equalsIgnoreCase("Admin")) {
@@ -131,11 +134,11 @@ public class Main {
             SubMenuItem subMenuManageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
 
             MethodMenuItem methodViewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
-            methodViewAllAccounts.AttachObserver(new ViewAllAccountsButton());
+            methodViewAllAccounts.AttachObserver(new IViewAllAccountsButton());
             subMenuManageWorkers.AddOption(methodViewAllAccounts);
 
             MethodMenuItem methodRegisterNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem //DONE
-            methodRegisterNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
+            methodRegisterNewAccount.AttachObserver(new IAddNewWorkerButton()); //!!!change!!!
             subMenuManageWorkers.AddOption(methodRegisterNewAccount);
 
             MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
@@ -150,16 +153,16 @@ public class Main {
 
         if (!isAdmin) {
             MethodMenuItem methodViewBranchStock = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //DONE
-            methodViewBranchStock.AttachObserver(new ViewAllStockInThisBranchButton());
+            methodViewBranchStock.AttachObserver(new IViewAllStockInThisBranchButton());
             subMenuProductInventory.AddOption(methodViewBranchStock);
         }
 
         MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer"); //MethodMenuItem
-        methodPerformPurchase.AttachObserver(new PurchaseMenu());
+        methodPerformPurchase.AttachObserver(new IPurchaseMenu());
         subMenuProductInventory.AddOption(methodPerformPurchase);
 
         MethodMenuItem methodViewAllStock = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
-        methodViewAllStock.AttachObserver(new ViewStockInAllBranchesButton());
+        methodViewAllStock.AttachObserver(new IViewStockInAllBranchesButton());
         subMenuProductInventory.AddOption(methodViewAllStock);
 
         mainMenu.AddOption(subMenuProductInventory);
@@ -176,7 +179,7 @@ public class Main {
 //        subMenuManageCustomers.AddOption(methodViewCustomerDetails);
 
         MethodMenuItem methodViewAllCustomers = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
-        methodViewAllCustomers.AttachObserver(new ViewAllCustomersButton());
+        methodViewAllCustomers.AttachObserver(new IViewAllCustomersButton());
         subMenuManageCustomers.AddOption(methodViewAllCustomers);
 
         mainMenu.AddOption(subMenuManageCustomers);

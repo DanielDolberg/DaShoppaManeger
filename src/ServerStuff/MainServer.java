@@ -29,6 +29,20 @@ public class MainServer {
         while (true) {
             new ClientHandler(serverSocket.accept()).start(); // Accept incoming client connections
         }
+
+    }
+
+    public static WorkerInNet getWorkerById(long id)
+    {
+        for (WorkerInNet worker : clientWriters)
+        {
+            if(worker.getID() == id)
+            {
+                return worker;
+            }
+        }
+
+        return null;
     }
 
     private static void loadAllJsons() throws IOException
@@ -97,35 +111,34 @@ public class MainServer {
                 case "CHAT_MESSAGE":
                     handleChatMessage(json);
                     break;
-                case "JOIN_CHAT":
-                    handleRequestToJoinChat(json);
-                    break;
                 case "REQUEST_LIST_OF_ACTIVE_USERS":
                     handleRequestOfActiveUsers(json);
+                    break;
+                case "REQUEST_TO_START_OR_JOIN_CHAT":
+                    handleRequestToJoinChat(json);
                     break;
             }
         }
 
         private void handleChatMessage(JSONObject message)
         {
-            System.out.println("Received: " + message);
-            synchronized (clientWriters) {
-                for (WorkerInNet writer : clientWriters) {
-                    writer.responseFromServer.println(extractMessageFromGivenJson(message)); // Broadcast message to all clients
+            ChatRoom room = null;
+            long roomID = message.getLong("roomID");
+            for (ChatRoom r : chatRooms)
+            {
+                if(r.roomID == roomID)
+                {
+                    room = r;
+                    break;
                 }
             }
-        }
+
+            if(room != null)
+            {
+                room.TakeMessage(message);
+            }
 
 
-        private String extractMessageFromGivenJson(JSONObject clientInput)
-        {
-            String[] jsonInArr =  new String[]{
-                    clientInput.getString("name"),
-                    clientInput.getString("message"),
-                    clientInput.getString("time_sent")
-            };
-
-            return "["+jsonInArr[2]+": " + jsonInArr[0] + "]: " + jsonInArr[1];
         }
 
         private void handleAuthenticationRequest(JSONObject json)
@@ -155,7 +168,7 @@ public class MainServer {
                     worker.responseFromServer.println("{ 'type': 'USER_ALREADY_LOGGED_IN' }");
                 }
                 else {
-                    worker.setInfo(foundUser);
+                    worker.setInfoFromJson(foundUser);
                     JSONObject response = new JSONObject();
                     response.put("type", "CRED_VALID");
                     response.put("workerinfo", foundUser);
@@ -185,7 +198,32 @@ public class MainServer {
 
         public void handleRequestToJoinChat(JSONObject json)
         {
+            WorkerInNet requestee =  getWorkerById(json.getLong("requestedUser"));
+            WorkerInNet requester =  getWorkerById(json.getLong("requester"));
 
+
+            ChatRoom room =  whichWorkerInWhichRoom.get(requestee);
+
+            if(room == null)
+            {
+                room = createNewRoom();
+            }
+
+            if(room.chatterBugs.size() < 1 || requester.getJobRole().equals("ShiftManager") || requester.getJobRole().equals("Admin"))
+            {
+                room.chatterBugs.add(requestee);
+                String response = "{ " +
+                        "'type':'REQUEST_TO_JOIN_CHAT_ACCEPTED'," +
+                        "'roomID':" + room.roomID +
+                        "}";
+
+                worker.responseFromServer.println(response);
+            }
+            else
+            {
+                String response = "{ 'type':'REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD'}";
+                worker.responseFromServer.println(response);
+            }
         }
 
         public void handleRequestOfActiveUsers(JSONObject json)
@@ -198,11 +236,11 @@ public class MainServer {
             for (WorkerInNet worker : clientWriters)
             {
                 JSONObject userEntry = new JSONObject();
-                userEntry.put("ID", worker.networkID);
+                userEntry.put("ID", worker.getID());
                 userEntry.put("name", worker.getFullName());
 
                 IDAndUser.put(userEntry);
-                //IDAndUser.put(worker.networkID, worker.getFullName());
+                //IDAndUser.put(worker.getID(), worker.getFullName());
             }
 
             response.put("users",IDAndUser);
@@ -228,11 +266,36 @@ public class MainServer {
             numberOfRooms++;
         }
 
-        private void notifyServerThatPlaceHasBeenGiven()
+        public void TakeMessage(JSONObject message)
         {
+            System.out.println("Received: " + message);
+            String extractedMessage = extractMessageFromGivenJson(message);
+            synchronized (chatterBugs) {
+                for (WorkerInNet writer : chatterBugs) {
+                    writer.responseFromServer.println(extractedMessage); // Broadcast message to all clients
+                    conversation.add(extractedMessage);
+                }
+            }
+        }
 
+        private String extractMessageFromGivenJson(JSONObject clientInput)
+        {
+            String[] jsonInArr =  new String[]{
+                    clientInput.getString("name"),
+                    clientInput.getString("message"),
+                    clientInput.getString("time_sent")
+            };
+
+            return "["+jsonInArr[2]+": " + jsonInArr[0] + "]: " + jsonInArr[1];
         }
     }
 
+    private static ChatRoom createNewRoom()
+    {
+        ChatRoom newRoom = new ChatRoom();
+        chatRooms.add(newRoom);
+
+        return newRoom;
+    }
 
 }

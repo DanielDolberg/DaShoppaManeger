@@ -20,7 +20,7 @@ public class ChatClient {
     private static PrintWriter out;
     private static BufferedReader in;
     private static final ChatClient chatClient = null;
-
+    private static long IDofRoom;
     // GUI Components
     private static JFrame frame;
     private static JTextArea messageArea;
@@ -31,8 +31,9 @@ public class ChatClient {
         setupGUI();
     }
 
-    public static void StartChat()
+    public static void StartChat(long RoomID)
     {
+        IDofRoom = RoomID;
         setupGUI();
         askServerForConvo();
         start();
@@ -72,7 +73,7 @@ public class ChatClient {
     private static void askServerForConvo()
     {
         try {
-            String[] fullConvo = ConnectionToMainServer.AskForConversation();
+            String[] fullConvo = ConnectionToMainServer.AskForConversationOfChat(IDofRoom);
 
             for (String message : fullConvo)
             {
@@ -90,7 +91,7 @@ public class ChatClient {
         String message = messageField.getText();
 
         if (message != null && !message.trim().isEmpty()) {
-            out.println(returnStringAsMessageJson(message)); // Send message to server
+            ConnectionToMainServer.SentTextMessage(returnStringAsMessageJson(message)); // Send message to server
             messageField.setText(""); // Clear input field
         }
     }
@@ -135,6 +136,7 @@ public class ChatClient {
 
         String finalMessage =  "{" +
                 "'type':'CHAT_MESSAGE'," +
+                "'roomID':" + IDofRoom +"," +
                 "'name':" + '"' + name + '"' + "," +
                 "'message':" + '"' + message + '"' + "," +
                 "time_sent:" + '"' + formattedTime + '"' +

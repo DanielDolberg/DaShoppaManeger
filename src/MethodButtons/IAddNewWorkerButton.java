@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import static MainClass.Main.littleErrorMessage;
 
-public class AddNewWorkerButton implements IMethodObserver {
+public class IAddNewWorkerButton implements IMethodObserver {
 
     @Override
     public void Invoke() throws IOException {

@@ -24,7 +24,7 @@ public class IShowPossibleChatRecipients implements IMethodObserver {
 
             //MethodMenuItem callUpChat = new MethodMenuItem();
 
-            pickAUserToChatWith.AddOption(new MethodMenuItem(title));
+            pickAUserToChatWith.AddOption(new StartUpChatButton(title,users.get(name)));
         }
 
 

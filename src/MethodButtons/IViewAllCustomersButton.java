@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import static MainClass.Main.littleErrorMessage;
 
-public class ViewAllCustomersButton implements IMethodObserver
+public class IViewAllCustomersButton implements IMethodObserver
 {
     public void Invoke() throws IOException {
         try {

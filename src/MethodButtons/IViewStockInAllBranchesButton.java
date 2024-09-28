@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static MainClass.Main.littleErrorMessage;
 
-public class ViewStockInAllBranchesButton  implements IMethodObserver
+public class IViewStockInAllBranchesButton implements IMethodObserver
 {
     public void Invoke() throws IOException {
         try {

@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static MainClass.Main.littleErrorMessage;
 
-public class ViewAllAccountsButton implements IMethodObserver {
+public class IViewAllAccountsButton implements IMethodObserver {
     @Override
     public void Invoke() throws IOException, JSONException {
         try {
