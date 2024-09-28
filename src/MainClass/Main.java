@@ -112,6 +112,11 @@ public class Main {
                 }
                 break;
             }
+            else if (areAuthTrue.getString("type").equals("USER_ALREADY_LOGGED_IN"))
+            {
+                numOfTries--;
+                System.out.println("The Provided User Is Already Logged In From A Different Place. Please Use A Different Account");
+            }
 
             if (!isUserLoggedIn && numOfTries < 3) {
                 System.out.println("Invalid credentials, please try again.");

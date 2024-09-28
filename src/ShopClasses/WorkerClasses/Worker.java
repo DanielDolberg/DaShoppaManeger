@@ -8,6 +8,12 @@ public class Worker
     protected long accountNumber;
     protected String branchName;
 
+    //empty constructor for use in derived classes
+    protected Worker()
+    {
+
+    }
+
     public Worker(JobRole jobRole, long workerNumber, String branchName, long accountNumber, String phoneNumber, long ID, String fullName) {
         this.jobRole = jobRole;
         this.workerNumber = workerNumber;

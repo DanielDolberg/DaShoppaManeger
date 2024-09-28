@@ -13,7 +13,7 @@ import Utilities.JSONHandler;
 import org.json.*;
 
 public class MainServer {
-    private static final Set<PrintWriter> clientWriters = new HashSet<>();
+    private static final Set<WorkerInNet> clientWriters = new HashSet<>();
     private static JSONArray customers;
     private static JSONArray sales;
     private static JSONArray stock;
@@ -45,20 +45,21 @@ public class MainServer {
 
     private static class ClientHandler extends Thread {
         private final Socket socket;
-        private PrintWriter out;
+        private WorkerInNet worker;
         private BufferedReader in;
 
         public ClientHandler(Socket socket) {
             this.socket = socket;
+            worker = new WorkerInNet();
         }
 
         public void run() {
             try {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                out = new PrintWriter(socket.getOutputStream(), true);
+                worker.responseFromServer = new PrintWriter(socket.getOutputStream(), true);
 
                 synchronized (clientWriters) {
-                    clientWriters.add(out); // Add this client's writer to the set
+                    clientWriters.add(worker); // Add this client's writer to the set
                 }
 
                 String message;
@@ -74,7 +75,7 @@ public class MainServer {
                     e.printStackTrace();
                 }
                 synchronized (clientWriters) {
-                    clientWriters.remove(out); // Remove client on disconnect
+                    clientWriters.remove(worker); // Remove client on disconnect
                 }
             }
         }
@@ -102,8 +103,8 @@ public class MainServer {
         {
             System.out.println("Received: " + message);
             synchronized (clientWriters) {
-                for (PrintWriter writer : clientWriters) {
-                    writer.println(extractMessageFromGivenJson(message)); // Broadcast message to all clients
+                for (WorkerInNet writer : clientWriters) {
+                    writer.responseFromServer.println(extractMessageFromGivenJson(message)); // Broadcast message to all clients
                 }
             }
         }
@@ -140,15 +141,39 @@ public class MainServer {
 
             if(foundUser != null)
             {
-                JSONObject response = new JSONObject();
-                response.put("type","CRED_VALID");
-                response.put("workerinfo", foundUser);
-                out.println(response);
+                boolean isUserAlreadyConnected = isFoundUserAlreadyConnected(foundUser);
+
+                if(isUserAlreadyConnected)
+                {
+                    worker.responseFromServer.println("{ 'type': 'USER_ALREADY_LOGGED_IN' }");
+                }
+                else {
+                    worker.setInfo(foundUser);
+                    JSONObject response = new JSONObject();
+                    response.put("type", "CRED_VALID");
+                    response.put("workerinfo", foundUser);
+                    worker.responseFromServer.println(response);
+                }
             }
             else
             {
-                out.println("{ 'type': 'CRED_INVALID' }");
+                worker.responseFromServer.println("{ 'type': 'CRED_INVALID' }");
             }
+        }
+
+        private boolean isFoundUserAlreadyConnected(JSONObject foundUser)
+        {
+            long IDofNewUser = foundUser.getLong("ID");
+
+            for (WorkerInNet worker : clientWriters)
+            {
+                if(worker.getID() == IDofNewUser)
+                {
+                    return  true;
+                }
+            }
+
+            return false;
         }
     }
 }
