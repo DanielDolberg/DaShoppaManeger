@@ -2,6 +2,8 @@ package MainClass;
 
 import Logs.LogManager;
 import MethodButtons.*;
+import ServerStuff.ChatClient;
+import ServerStuff.ConnectionToMainServer;
 import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
@@ -11,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Scanner;
 
 public class Main {
@@ -27,6 +30,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+            ConnectionToMainServer.ConnectToServer();
             // login screen
             login();
 
@@ -67,11 +71,8 @@ public class Main {
     }
 
     public static void login()  throws IOException, JSONException {
-        JSONArray workersArray = null;
+        ConnectionToMainServer.ConnectToServer();
 
-        // Load the JSON data from the file
-        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
-        workersArray = jsonData.getJSONArray("workers");
 
         isUserLoggedIn = false;
         int numOfTries = 0;
@@ -86,32 +87,30 @@ public class Main {
 
             numOfTries++;
 
-            // Check users (workers/admins)
-            for (int i = 0; i < workersArray.length(); i++) {
-                JSONObject user = workersArray.getJSONObject(i);
-                String userNameInJson = user.getString("username");
-                String passwordInJson = user.getString("password");
+            JSONObject areAuthTrue = ConnectionToMainServer.checkIfCredentialsAreTrue(userName,password);
 
-                if (userName.equals(userNameInJson) && password.equals(passwordInJson)) {
-                    isUserLoggedIn = true;
-                    String jobRole = user.getString("jobRole");
-                    if (jobRole.equalsIgnoreCase("ShiftManager")) {
-                        isShiftManager = true;
-                    }
+            if (areAuthTrue.getString("type").equals("CRED_VALID"))
+            {
+                JSONObject user = areAuthTrue.getJSONObject("workerinfo");
 
-                    theWorkerThatIsLoggedIn = user;
-                    loggedInUsersName = userNameInJson;
-                    workerBranch = user.getString("branchName");
-
-                    if (jobRole.equalsIgnoreCase("Admin")) {
-                        isAdmin = true;
-                        System.out.println("Welcome " + userNameInJson + ", you are logged in as an admin.");
-                    } else {
-                        isAdmin = false;
-                        System.out.println("Welcome " + userNameInJson + ", you are logged in as a worker.");
-                    }
-                    break;
+                isUserLoggedIn = true;
+                String jobRole = user.getString("jobRole");
+                if (jobRole.equalsIgnoreCase("ShiftManager")) {
+                    isShiftManager = true;
                 }
+
+                theWorkerThatIsLoggedIn = user;
+                loggedInUsersName = userName;
+                workerBranch = user.getString("branchName");
+
+                if (jobRole.equalsIgnoreCase("Admin")) {
+                    isAdmin = true;
+                    System.out.println("Welcome " + loggedInUsersName + ", you are logged in as an admin.");
+                } else {
+                    isAdmin = false;
+                    System.out.println("Welcome " + loggedInUsersName + ", you are logged in as a worker.");
+                }
+                break;
             }
 
             if (!isUserLoggedIn && numOfTries < 3) {
@@ -123,6 +122,8 @@ public class Main {
             System.out.println("You were locked out of your account, please try again later.");
         }
     }
+
+
 
     public static void setUpShop() throws IOException {
         MainMenuItem mainMenu = new MainMenuItem("DeShooppa Manager MainClass.Main Menu");

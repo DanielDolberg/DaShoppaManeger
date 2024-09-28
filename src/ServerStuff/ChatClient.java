@@ -1,4 +1,4 @@
-package Chat;
+package ServerStuff;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import MainClass.Main;
-import org.json.*;
 
 public class ChatClient {
     private static final String SERVER_ADDRESS = "localhost"; // Change this to server IP if needed
@@ -20,7 +19,7 @@ public class ChatClient {
     private static Socket socket;
     private static PrintWriter out;
     private static BufferedReader in;
-    private static ChatClient chatClient = null;
+    private static final ChatClient chatClient = null;
 
     // GUI Components
     private static JFrame frame;
@@ -118,7 +117,7 @@ public class ChatClient {
         String formattedTime = formatter.format(currentTime);
 
         String finalMessage =  "{" +
-                "'type':'text'," +
+                "'type':'CHAT_MESSAGE'," +
                 "'name':" + '"' + name + '"' + "," +
                 "'message':" + '"' + message + '"' + "," +
                 "time_sent:" + '"' + formattedTime + '"' +

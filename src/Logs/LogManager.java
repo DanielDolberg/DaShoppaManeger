@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class LogManager  implements IMethodObserver {
 
-    private String directoryPath;
-    private String fileName;
+    private final String directoryPath;
+    private final String fileName;
     private File logFile;
     private String timestamp;
 
