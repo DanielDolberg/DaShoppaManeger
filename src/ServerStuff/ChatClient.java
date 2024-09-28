@@ -34,6 +34,7 @@ public class ChatClient {
     public static void StartChat()
     {
         setupGUI();
+        askServerForConvo();
         start();
     }
 
@@ -66,6 +67,22 @@ public class ChatClient {
         frame.add(sendButton, BorderLayout.EAST); // Send button on the right
 
         frame.setVisible(true);
+    }
+
+    private static void askServerForConvo()
+    {
+        try {
+            String[] fullConvo = ConnectionToMainServer.AskForConversation();
+
+            for (String message : fullConvo)
+            {
+                messageArea.append(message);
+            }
+        }
+        catch (Exception ex)
+        {
+            messageArea.append("<<previou messages could not be loaded>> \n");
+        }
     }
 
     private static void sendMessage() {

@@ -6,14 +6,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import Utilities.JSONHandler;
 import org.json.*;
 
 public class MainServer {
     private static final Set<WorkerInNet> clientWriters = new HashSet<>();
+    private static final Set<ChatRoom> chatRooms = new HashSet<>();
+    private static Map<WorkerInNet, ChatRoom> whichWorkerInWhichRoom = new HashMap<>();
     private static JSONArray customers;
     private static JSONArray sales;
     private static JSONArray stock;
@@ -69,13 +70,13 @@ public class MainServer {
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
             } finally {
+                synchronized (clientWriters) {
+                    clientWriters.remove(worker); // Remove client on disconnect
+                }
                 try {
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-                synchronized (clientWriters) {
-                    clientWriters.remove(worker); // Remove client on disconnect
                 }
             }
         }
@@ -95,6 +96,12 @@ public class MainServer {
                     break;
                 case "CHAT_MESSAGE":
                     handleChatMessage(json);
+                    break;
+                case "JOIN_CHAT":
+                    handleRequestToJoinChat(json);
+                    break;
+                case "REQUEST_LIST_OF_ACTIVE_USERS":
+                    handleRequestOfActiveUsers(json);
                     break;
             }
         }
@@ -175,5 +182,57 @@ public class MainServer {
 
             return false;
         }
+
+        public void handleRequestToJoinChat(JSONObject json)
+        {
+
+        }
+
+        public void handleRequestOfActiveUsers(JSONObject json)
+        {
+            JSONObject response = new JSONObject();
+            response.put("type","LIST_OF_USERS");
+
+            JSONArray IDAndUser = new JSONArray();
+
+            for (WorkerInNet worker : clientWriters)
+            {
+                JSONObject userEntry = new JSONObject();
+                userEntry.put("ID", worker.networkID);
+                userEntry.put("name", worker.getFullName());
+
+                IDAndUser.put(userEntry);
+                //IDAndUser.put(worker.networkID, worker.getFullName());
+            }
+
+            response.put("users",IDAndUser);
+
+            System.out.println(response);
+            worker.responseFromServer.println(response);
+        }
     }
+
+    private static class ChatRoom
+    {
+        LinkedList<String> conversation;
+        LinkedList<WorkerInNet> chatterBugs;
+        public static long numberOfRooms = 0;
+        public long roomID;
+
+        public ChatRoom()
+        {
+            conversation = new LinkedList<>();
+            chatterBugs = new LinkedList<>();
+
+            roomID = numberOfRooms;
+            numberOfRooms++;
+        }
+
+        private void notifyServerThatPlaceHasBeenGiven()
+        {
+
+        }
+    }
+
+
 }

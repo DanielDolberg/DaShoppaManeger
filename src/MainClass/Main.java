@@ -1,19 +1,14 @@
 package MainClass;
 
-import Logs.LogManager;
 import MethodButtons.*;
-import ServerStuff.ChatClient;
 import ServerStuff.ConnectionToMainServer;
-import Utilities.JSONHandler;
 import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
 import MenuClasses.SubMenuItem;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.Scanner;
 
 public class Main {
@@ -30,7 +25,6 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            ConnectionToMainServer.ConnectToServer();
             // login screen
             login();
 
@@ -72,7 +66,6 @@ public class Main {
 
     public static void login()  throws IOException, JSONException {
         ConnectionToMainServer.ConnectToServer();
-
 
         isUserLoggedIn = false;
         int numOfTries = 0;
@@ -221,7 +214,7 @@ public class Main {
         */
 
         MethodMenuItem startChat = new MethodMenuItem("openChat"); //!!!MethodMenuItem or sub?
-        startChat.AttachObserver(new IOpenChatButton());
+        startChat.AttachObserver(new IShowPossibleChatRecipients());
         mainMenu.AddOption(startChat);
 
         // Manage Logs - sub

@@ -1,6 +1,7 @@
 package ServerStuff;
 
 import MainClass.Main;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -10,6 +11,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class ConnectionToMainServer {
     private static final String SERVER_ADDRESS = "localhost"; // Change this to server IP if needed
@@ -18,7 +22,6 @@ public class ConnectionToMainServer {
     private static Socket socket;
     private static PrintWriter out;
     private static BufferedReader in;
-    private static final ChatClient chatClient = null;
 
     public static void ConnectToServer() throws IOException {
         try {
@@ -52,6 +55,51 @@ public class ConnectionToMainServer {
         return new JSONObject(response);
     }
 
+    public static String[] AskForConversation() throws IOException
+    {
+        LinkedList<String> convo = new LinkedList<>();
 
+        String requestForConvo =
+                "{" +
+                        "'type' : 'REQUESTING_CONVERSATION'" +
+                "}";
 
+        String response = in.readLine();
+
+        JSONArray chat = new JSONObject(response).getJSONArray("chat");
+
+        for (int i=0; i < chat.length(); i++)
+        {
+            JSONObject message = chat.getJSONObject(i);
+
+            convo.add(message.getString("text"));
+        }
+
+        return (String[])(convo.toArray());
+    }
+
+    public static Map<String, Long> AskForListOfConnectedUsers() throws IOException
+    {
+        Map<String, Long> userList = new HashMap<>();
+
+        String requestUsers=
+                "{" +
+                        "'type' : 'REQUEST_LIST_OF_ACTIVE_USERS'" +
+                        "}";
+
+        out.println(requestUsers);
+
+        String response = in.readLine();
+
+        JSONArray chat = new JSONObject(response).getJSONArray("users");
+
+        for (int i=0; i < chat.length(); i++)
+        {
+            JSONObject message = chat.getJSONObject(i);
+
+            userList.put(message.getString("name"), message.getLong("ID"));
+        }
+
+        return userList;
+    }
 }
