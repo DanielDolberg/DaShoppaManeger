@@ -8,9 +8,9 @@ import MenuClasses.SubMenuItem;
 import ShopClasses.WorkerClasses.Worker;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.Scanner;
+import Logs.LogManager;
 
 public class Main {
 
@@ -20,7 +20,7 @@ public class Main {
     public static String workerBranch = "";
     public static String loggedInUsersName = "";
     public static Worker loggedInUser = null;
-
+    public static LogManager logManager = new LogManager();
     private static final String bigErrorMessage = "A big error happened, please contact support";
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
 

@@ -1,14 +1,17 @@
 package MethodButtons;
 
+import Logs.LogManager;
+import MainClass.Main;
 import MenuClasses.IMethodObserver;
 import ShopClasses.CustomerClasses.CustomerManager;
 import Utilities.JSONHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import java.util.regex.Pattern;
 import java.io.IOException;
 import java.util.Scanner;
 
+import static MainClass.Main.logManager;
 import static MainClass.Main.workerBranch;
 
 public class IPurchaseMenu implements IMethodObserver {
@@ -17,9 +20,14 @@ public class IPurchaseMenu implements IMethodObserver {
     public void Invoke() {
         Scanner scanner = new Scanner(System.in);
 
-        // Get customer ID
-        System.out.println("Enter Customer ID: ");
-        String customerId = scanner.nextLine();
+        String customerId;
+        do {
+            System.out.println("Enter Customer ID (exactly 9 digits): ");
+            customerId = scanner.nextLine();
+            if (!Pattern.matches("\\d{9}", customerId)) {
+                System.out.println("Invalid Customer ID. Please enter exactly 9 digits.");
+            }
+        } while (!Pattern.matches("\\d{9}", customerId));
 
         try {
             JSONObject customer = CustomerManager.findCustomerByID(customerId);
@@ -31,21 +39,10 @@ public class IPurchaseMenu implements IMethodObserver {
                 if (answer.equalsIgnoreCase("no")) {
                     return;
                 }
-                System.out.println("Please enter details to add a new customer:");
-                System.out.print("Full Name: ");
-                String fullName = scanner.nextLine();
-                System.out.print("Phone Number: ");
-                String phoneNumber = scanner.nextLine();
 
-                JSONObject newCustomer = new JSONObject();
-                newCustomer.put("fullName", fullName);
-                newCustomer.put("ID", customerId);
-                newCustomer.put("phoneNumber", phoneNumber);
-                newCustomer.put("status", "New");
-
-                // Add the new customer to JSON
-                CustomerManager.addCustomer(newCustomer);
-                customer = newCustomer;
+                customer = createNewCustomer(customerId);
+                LogManager logManager = Main.logManager;
+                logManager.WriteToFile("INFO: New customer registered with ID: " + customerId + " by User: " + Main.loggedInUsersName);
             }
 
             // Proceed with purchase
@@ -55,6 +52,45 @@ public class IPurchaseMenu implements IMethodObserver {
             System.out.println("Error handling customer data: " + e.getMessage());
         }
     }
+
+    private JSONObject createNewCustomer(String customerId) throws IOException {
+        JSONObject newCustomer = new JSONObject();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please enter details to add a new customer:");
+
+        // Validate full name
+        String fullName;
+        do {
+            System.out.print("Full Name: ");
+            fullName = scanner.nextLine();
+            if (!Pattern.matches("[a-zA-Z ]+", fullName) || fullName.isEmpty()) {
+                System.out.println("Invalid full name. Please enter only letters and spaces.");
+            }
+        } while (!Pattern.matches("[a-zA-Z ]+", fullName) || fullName.isEmpty());
+
+        // Validate phone number (e.g., must be in format +972-XX-XXXXXXX)
+        String phoneNumber;
+        do {
+            System.out.print("Phone Number (format: +972-XX-XXXXXXX): ");
+            phoneNumber = scanner.nextLine();
+            if (!Pattern.matches("\\+972-\\d{2}-\\d{7}", phoneNumber)) {
+                System.out.println("Invalid phone number format. Please follow the format +972-XX-XXXXXXX.");
+            }
+        } while (!Pattern.matches("\\+972-\\d{2}-\\d{7}", phoneNumber));
+
+        // Add validated data to newCustomer JSONObject
+        newCustomer.put("fullName", fullName);
+        newCustomer.put("ID", customerId);
+        newCustomer.put("phoneNumber", phoneNumber);
+        newCustomer.put("status", "New");
+
+        // Add the new customer to JSON
+        CustomerManager.addCustomer(newCustomer);
+
+        return newCustomer;
+    }
+
 
     private void processPurchase(JSONObject customer) throws IOException {
         System.out.println("Perform a purchase on behalf of " + customer.getString("fullName") + " who is a " + customer.getString("status") + " customer.");
@@ -84,20 +120,44 @@ public class IPurchaseMenu implements IMethodObserver {
         displayItems(items);
 
         System.out.println("Enter item number to purchase: ");
-        int itemIndex = scanner.nextInt() - 1;
-        scanner.nextLine();  // Clear buffer
-        if (itemIndex < 0 || itemIndex >= items.length()) {
-            System.out.println("Invalid item number!");
-            return;
-        }
+        int itemIndex;
+
+        do {
+            itemIndex = scanner.nextInt() - 1;
+            scanner.nextLine();  // Clear buffer
+
+            if (itemIndex < 0 || itemIndex >= items.length()) {
+                System.out.println("Invalid item number! Please enter a valid item number:");
+            }
+        } while (itemIndex < 0 || itemIndex >= items.length());
 
         JSONObject selectedItem = items.getJSONObject(itemIndex);
 
         // Update item stock
         int stock = selectedItem.getInt("amountInStock");
         if (stock > 0) {
+            // Calculate final price after discount
+            double price = selectedItem.getDouble("price");
+            double discountPercent = getCustomerDiscount(customer);
+            double discountAmount = price * discountPercent;
+            double finalPrice = price - discountAmount;
+
+            // Reduce stock by 1
             selectedItem.put("amountInStock", stock - 1);
             System.out.println("Purchased " + selectedItem.getString("itemName") + " successfully.");
+            // Create log entry
+            String logEntry = String.format("PURCHASE: %s by Customer ID: %s - Price: %.2f at Branch: %s",
+                    selectedItem.getString("itemName"),
+                    customer.getString("fullName"),
+                    finalPrice,
+                    workerBranch);
+
+            // Log the purchase
+            logManager.WriteToFile(logEntry);
+            System.out.println("Original Price: " + price + ", Discount: " + (discountPercent * 100) + "%, Final Price: " + finalPrice);
+
+            // Update sales data
+            updateSalesData(workerBranch, selectedItem, 1, finalPrice); // Pass final price for sales data update
         } else {
             System.out.println("Item is out of stock.");
             return;
@@ -108,6 +168,61 @@ public class IPurchaseMenu implements IMethodObserver {
 
         // Save updated inventory and customer status
         saveBranchItems(workerBranch, items);
+    }
+
+    private double getCustomerDiscount(JSONObject customer) {
+        String status = customer.getString("status");
+        switch (status) {
+            case "New":
+                return 0.0; // No discount for new customers
+            case "Returning":
+                return 0.2; // 20% discount for returning customers
+            case "VIP":
+                return 0.5; // 50% discount for VIP customers
+            default:
+                return 0.0; // Default no discount
+        }
+    }
+
+    private void updateSalesData(String branch, JSONObject item, int quantity, double finalPrice) throws IOException {
+        // Load the sales data
+        JSONObject salesData = JSONHandler.readFrom(JSONHandler.SalesJsonFilePath);
+        JSONObject branchSales = salesData.getJSONObject("branches").getJSONObject(branch);
+
+        // Find the item in sales
+        JSONArray salesItems = branchSales.getJSONArray("items");
+        String itemName = item.getString("itemName");
+        boolean itemFound = false;
+
+        // Loop through the sales items to find the corresponding item
+        for (int i = 0; i < salesItems.length(); i++) {
+            JSONObject salesItem = salesItems.getJSONObject(i);
+            if (salesItem.getString("itemName").equals(itemName)) {
+                // Update sales revenue and total amount sold
+                salesItem.put("revenue", salesItem.getDouble("revenue") + finalPrice);
+                branchSales.put("totalAmountSold", branchSales.getInt("totalAmountSold") + quantity);
+                branchSales.put("totalRevenue", branchSales.getDouble("totalRevenue") + finalPrice);
+                itemFound = true;
+                break;
+            }
+        }
+
+        // If the item wasn't found in sales, we need to add it
+        if (!itemFound) {
+            JSONObject newSalesItem = new JSONObject();
+            newSalesItem.put("itemName", itemName);
+            newSalesItem.put("price", item.getDouble("price")); // Original price for reference
+            newSalesItem.put("revenue", finalPrice); // Use final price as revenue
+            salesItems.put(newSalesItem); // Add new item to sales array
+
+            // Update total sold and revenue
+            branchSales.put("totalAmountSold", branchSales.getInt("totalAmountSold") + quantity);
+            branchSales.put("totalRevenue", branchSales.getDouble("totalRevenue") + finalPrice);
+        }
+
+        // Save updated sales data
+        JSONHandler.writeTo(JSONHandler.SalesJsonFilePath, salesData);
+        System.out.println("Sales data updated successfully.");
     }
 
 
@@ -167,5 +282,4 @@ public class IPurchaseMenu implements IMethodObserver {
         JSONHandler.writeTo(JSONHandler.CustomersJsonFilePath, jsonData);
         System.out.println("Customer status updated successfully.");
     }
-
 }
