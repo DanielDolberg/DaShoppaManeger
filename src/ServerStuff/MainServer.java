@@ -23,15 +23,19 @@ public class MainServer {
     private static JSONArray workers;
 
     public static void main(String[] args) throws Exception {
-        loadAllJsons();
+        try {
+            loadAllJsons();
 
-
-        System.out.println("Chat server started...");
-        ServerSocket serverSocket = new ServerSocket(12345); // Use a specific port for connection
-        while (true) {
-            new ClientHandler(serverSocket.accept()).start(); // Accept incoming client connections
+            System.out.println("Chat server started...");
+            ServerSocket serverSocket = new ServerSocket(12345); // Use a specific port for connection
+            while (true) {
+                new ClientHandler(serverSocket.accept()).start(); // Accept incoming client connections
+            }
+        } catch (IOException e) {
+            // If the JSON file path does not exist or if there’s a problem reading the file (e.g., incorrect permissions).
+            System.err.println("File I/O Exception: " + e);
         }
-
+        System.err.println("closed server.");
     }
 
     public static WorkerInNet getWorkerById(long id)
@@ -43,7 +47,6 @@ public class MainServer {
                 return worker;
             }
         }
-
         return null;
     }
 
@@ -57,6 +60,7 @@ public class MainServer {
         workerToNotif.responseFromServer.println(notification);
     }
 
+    // reads Jsons and loads info onto JsonArrays
     private static void loadAllJsons() throws IOException
     {
         // Load the JSON data from the file

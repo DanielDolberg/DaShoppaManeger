@@ -129,7 +129,7 @@ public class ConnectionToMainServer {
     }
 
     public static void StartChatWith(long ID) throws IOException {
-        LinkedList<String> request = new LinkedList<>();
+        //LinkedList<String> request = new LinkedList<>();
 
         String requestJson =
                 "{" +

@@ -98,7 +98,7 @@ public class ChatClient {
         }
         catch (Exception ex)
         {
-            messageArea.append("<<previou messages could not be loaded>> \n");
+            messageArea.append("<<previous messages could not be loaded>> \n");
         }
     }
 

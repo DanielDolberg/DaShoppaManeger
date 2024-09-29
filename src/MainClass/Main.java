@@ -39,28 +39,28 @@ public class Main {
         } catch (JSONException e) {
             System.out.println(bigErrorMessage);
             // Raised when trying to access a field or element that doesn't exist
-            System.out.println("JSONException: " + e);
+            e.printStackTrace();
             System.err.println("JSONException: " + e);
         } catch (NullPointerException e) { //
             System.out.println(bigErrorMessage);
             // If the structure in the JSON file doesn't match what the code expects, accessing a non-existent object
-            System.out.println("NullPointerException: " + e);
+            e.printStackTrace();
             System.err.println("NullPointerException: " + e);
         } catch (ClassCastException e) { //
             System.out.println(bigErrorMessage);
             // Occurs when you attempt to cast a JSON value to an incompatible type.
             // For example, trying to retrieve a string from a JSON field that holds an integer.
-            System.out.println("ClassCastException: " + e);
+            e.printStackTrace();
             System.err.println("ClassCastException: " + e);
         } catch (IOException e) {
             System.out.println(bigErrorMessage);
             // If the JSON file path does not exist or if there’s a problem reading the file (e.g., incorrect permissions).
-            System.out.println("File I/O Exception: " + e);
+            e.printStackTrace();
             System.err.println("File I/O Exception: " + e);
         } catch (Exception e) {
             System.out.println(bigErrorMessage);
             // any Exception we didn't think of
-            System.out.println("Unexpected Exception: " + e);
+            e.printStackTrace();
             System.err.println("Unexpected Exception: " + e);
         }
     }
