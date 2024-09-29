@@ -16,7 +16,13 @@ public class StartUpChatButton extends MethodMenuItem {
     @Override
     public void ActivateMenuItem() throws IOException
     {
-        ConnectionToMainServer.StartChatWith(IDofRecipiant);
-        Previous.ActivateMenuItem();
+        if(!ConnectionToMainServer.isInChat) {
+            ConnectionToMainServer.StartChatWith(IDofRecipiant);
+        }
+        else
+        {
+            System.out.println("we detected user is already in chat, please close before attempting new chat");
+        }
+        //Previous.ActivateMenuItem();
     }
 }

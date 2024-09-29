@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.LinkedList;
 
 import MainClass.Main;
 import org.json.JSONObject;
@@ -55,6 +56,7 @@ public class ChatClient {
             @Override
             public void windowClosing(WindowEvent e) {
                     ConnectionToMainServer.CloseConnectionOfChat(IDofRoom, Main.loggedInUser.getID()); // Custom method to close socket or cleanup
+                    ConnectionToMainServer.isInChat = false;
                     frame.dispose(); // Close the window and release resources
             }
         });
@@ -89,11 +91,12 @@ public class ChatClient {
     private static void askServerForConvo()
     {
         try {
-            String[] fullConvo = ConnectionToMainServer.AskForConversationOfChat(IDofRoom);
+            LinkedList<String> fullConvo = ConnectionToMainServer.AskForConversationOfChat(IDofRoom);
 
-            for (String message : fullConvo)
-            {
-                messageArea.append(message);
+            if(!fullConvo.isEmpty()) {
+                for (String message : fullConvo) {
+                    messageArea.append(message + "\n");
+                }
             }
         }
         catch (Exception ex)

@@ -20,7 +20,7 @@ public class ConnectionToMainServer {
     private static Socket socket;
     private static PrintWriter out;
     private static BufferedReader in;
-
+    public static boolean isInChat = false;
 
     private static JSONObject incomingMessage = null; //the string that will hold all of the incoming messages
     private static final Object MuteEx = new Object();
@@ -46,7 +46,11 @@ public class ConnectionToMainServer {
                                     ReceiveTextMessage(inToJson);
                                     break;
                                 case "NOTIFY_USER_JOIN_CHAT":
+                                    isInChat = true;
                                     ChatClient.StartChat(inToJson.getLong("roomID"));
+                                    break;
+                                case "USER_LEFT_CHAT":
+                                    isInChat = false;
                                     break;
                                 default:
                                     incomingMessage = inToJson;
@@ -83,7 +87,7 @@ public class ConnectionToMainServer {
         return (response);
     }
 
-    public static String[] AskForConversationOfChat(long IDofRoom) throws IOException {
+    public static LinkedList<String> AskForConversationOfChat(long IDofRoom) throws IOException {
         LinkedList<String> convo = new LinkedList<>();
 
         String requestForConvo =
@@ -91,6 +95,8 @@ public class ConnectionToMainServer {
                         "'type' : 'REQUESTING_CONVERSATION'," +
                         "'roomID':" + IDofRoom +
                         "}";
+
+        out.println(requestForConvo);
 
         JSONObject response = waitForResponse();
 
@@ -102,7 +108,7 @@ public class ConnectionToMainServer {
             convo.add(message.getString("text"));
         }
 
-        return (String[]) (convo.toArray());
+        return convo;
     }
 
     public static Map<String, Long> AskForListOfConnectedUsers() throws IOException {
@@ -161,6 +167,8 @@ public class ConnectionToMainServer {
         reportClosingMsg.put("workerID", workerID);
 
         out.println(reportClosingMsg);
+
+        isInChat = false;
     }
 
     public static void ReceiveTextMessage(JSONObject message) {

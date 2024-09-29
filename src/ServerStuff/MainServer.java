@@ -159,7 +159,38 @@ public class MainServer {
                 case "NOTIFY_USER_LEFT_CHAT":
                     handleUserLeavingChat(json);
                     break;
+                case "REQUESTING_CONVERSATION":
+                    retrieveConvoOfRoom(json);
+                    break;
             }
+        }
+
+        private void retrieveConvoOfRoom(JSONObject json)
+        {
+            ChatRoom room = null;
+            for (ChatRoom r : chatRooms)
+            {
+                if(r.roomID == json.getLong("roomID"))
+                {
+                    room = r;
+                    break;
+                }
+            }
+
+            JSONObject response = new JSONObject();
+            response.put("type", "CONVERSATION");
+
+            JSONArray convo = new JSONArray();
+            synchronized (muteExForLists) {
+                for (String str : room.conversation) {
+                    JSONObject tmp = new JSONObject();
+                    tmp.put("text", str);
+                    convo.put(tmp);
+                }
+            }
+            response.put("chat",convo);
+
+            worker.responseFromServer.println(response);
         }
 
         private void handleChatMessage(JSONObject message)
@@ -190,6 +221,8 @@ public class MainServer {
 
             WorkerInNet leavingWorker = getWorkerById(workerID);
             ChatRoom room = whichWorkerInWhichRoom.get(leavingWorker);
+
+            leavingWorker.responseFromServer.println("{'type':'USER_LEFT_CHAT'}");
 
             if(room != null) {
                 room.chatters.remove(leavingWorker);
