@@ -21,6 +21,7 @@ public class MainServer {
     private static JSONArray sales;
     private static JSONArray stock;
     private static JSONArray workers;
+    private static final Object muteExForLists = new Object();
 
     public static void main(String[] args) throws Exception {
         try {
@@ -72,6 +73,15 @@ public class MainServer {
 
         //JSONObject jsonDataStock = JSONHandler.readFrom(JSONHandler.StockJsonFilePath);
         //stock = jsonDataStock.getJSONArray("stock");
+    }
+
+    private static void joinWorkerToRoom(WorkerInNet workerTOJoin, ChatRoom room)
+    {
+        synchronized (muteExForLists)
+        {
+            whichWorkerInWhichRoom.put(workerTOJoin,room);
+            room.chatters.add(workerTOJoin);
+        }
     }
 
     private static class ClientHandler extends Thread {
@@ -128,7 +138,7 @@ public class MainServer {
         {
             JSONObject json = new JSONObject(message);
 
-            System.out.println(json);
+            //System.out.println(json);
 
             String typeOfMessage = json.getString("type");
 
@@ -244,49 +254,50 @@ public class MainServer {
             return false;
         }
 
-        public void handleRequestToJoinChat(JSONObject json)
-        {
-            WorkerInNet requestee =  getWorkerById(json.getLong("requestedUser"));
-            WorkerInNet requester =  getWorkerById(json.getLong("requester"));
+        public void handleRequestToJoinChat(JSONObject json) {
+            WorkerInNet requestedUser = getWorkerById(json.getLong("requestedUser"));
 
-            checkIfWorkerAlreadyInRoomOrisWaitingForRoomAndRemoveIfDoes(requestee);
+            WorkerInNet requester = getWorkerById(json.getLong("requester"));
 
-            boolean wasRoomJustCreated = false;
+            checkIfWorkerAlreadyInRoomOrisWaitingForRoomAndRemoveIfDoes(requester);
 
-            ChatRoom room = whichWorkerInWhichRoom.get(requestee);
+            ChatRoom room = whichWorkerInWhichRoom.get(requestedUser);
 
-            if(room == null)
-            {
+            if (room == null) {
+                // Create a new room since the requestedUser is not in any room
                 room = createNewRoom();
+                chatRooms.add(room);
 
-                whichWorkerInWhichRoom.put(requester,room);
-                room.chatters.add(requester);
+
+                MainServer.joinWorkerToRoom(requester, room); // Add the requester to the room
+
                 String response = "{ " +
                         "'type':'REQUEST_TO_JOIN_CHAT_ACCEPTED'," +
                         "'roomID':" + room.roomID +
                         "}";
 
-                requester.responseFromServer.println(response);
+                requester.responseFromServer.println(response); // Notify the requester
 
-                MainServer.NotifyWorkerTheyJoinedTheChat(requestee, room);
-                room.chatters.add(requestee);
+                MainServer.joinWorkerToRoom(requestedUser, room); // Add the requestedUser to the room
+                MainServer.NotifyWorkerTheyJoinedTheChat(requestedUser, room); // Notify the requestedUser to open the chat GUI
             }
-            else if(room.chatters.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin)
-            {
-                whichWorkerInWhichRoom.put(requester,room);
-                room.chatters.add(requester);
+            else if (room.chatters.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin) {
+                // Room exists, add the requester to the room if allowed
                 String response = "{ " +
                         "'type':'REQUEST_TO_JOIN_CHAT_ACCEPTED'," +
                         "'roomID':" + room.roomID +
                         "}";
+                requester.responseFromServer.println(response); // Notify the requester
 
-                requester.responseFromServer.println(response);
+                // Only notify the requester, as the requestedUser is already in the room
+                MainServer.joinWorkerToRoom(requester, room);
+                //MainServer.NotifyWorkerTheyJoinedTheChat(requester, room);
             }
-            else
-            {
+            else {
+                // If the room is full and the requester is not a ShiftManager or Admin, put them in a queue
                 room.peopleInQueue.add(requester);
-                String response = "{ 'type':'REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD', 'position' :" +room.peopleInQueue.size() +"}";
-                requester.responseFromServer.println(response);
+                String response = "{ 'type':'REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD', 'position' :" + room.peopleInQueue.size() + "}";
+                requester.responseFromServer.println(response); // Notify the requester they are on hold
             }
         }
 
@@ -332,7 +343,7 @@ public class MainServer {
 
             response.put("users",IDAndUser);
 
-            System.out.println(response);
+            //System.out.println(response);
             worker.responseFromServer.println(response);
         }
     }
@@ -374,11 +385,12 @@ public class MainServer {
 
         public void letNextWorkerInQueueIn()
         {
+
             if(!peopleInQueue.isEmpty())
             {
                 WorkerInNet includedWorker = peopleInQueue.poll();
                 MainServer.NotifyWorkerTheyJoinedTheChat(includedWorker, this);
-                chatters.add(includedWorker);
+                MainServer.joinWorkerToRoom(includedWorker,this);
             }
             else if(chatters.isEmpty()) //if the chat is empty delete it
             {
