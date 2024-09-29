@@ -220,6 +220,7 @@ public class MainServer {
                     response.put("type", "CRED_VALID");
                     response.put("workerinfo", foundUser);
                     worker.responseFromServer.println(response);
+                    worker.isLoggedIn = true;
                 }
             }
             else
@@ -248,11 +249,11 @@ public class MainServer {
             WorkerInNet requestee =  getWorkerById(json.getLong("requestedUser"));
             WorkerInNet requester =  getWorkerById(json.getLong("requester"));
 
-            checkIfWorkerAlreadyisWaitingForRoomAndRemoveIfDoes(requestee);
+            checkIfWorkerAlreadyInRoomOrisWaitingForRoomAndRemoveIfDoes(requestee);
 
             boolean wasRoomJustCreated = false;
 
-            ChatRoom room =  whichWorkerInWhichRoom.get(requestee);
+            ChatRoom room = whichWorkerInWhichRoom.get(requestee);
 
             if(room == null)
             {
@@ -265,12 +266,10 @@ public class MainServer {
                         "'roomID':" + room.roomID +
                         "}";
 
-                worker.responseFromServer.println(response);
+                requester.responseFromServer.println(response);
 
                 MainServer.NotifyWorkerTheyJoinedTheChat(requestee, room);
                 room.chatters.add(requestee);
-
-
             }
             else if(room.chatters.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin)
             {
@@ -281,24 +280,32 @@ public class MainServer {
                         "'roomID':" + room.roomID +
                         "}";
 
-                worker.responseFromServer.println(response);
+                requester.responseFromServer.println(response);
             }
             else
             {
                 room.peopleInQueue.add(requester);
                 String response = "{ 'type':'REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD', 'position' :" +room.peopleInQueue.size() +"}";
-                worker.responseFromServer.println(response);
+                requester.responseFromServer.println(response);
             }
         }
 
-        public static void checkIfWorkerAlreadyisWaitingForRoomAndRemoveIfDoes(WorkerInNet worker)
+        public static void checkIfWorkerAlreadyInRoomOrisWaitingForRoomAndRemoveIfDoes(WorkerInNet worker)
         {
+            ChatRoom roomWorkerIsIn =  whichWorkerInWhichRoom.get(worker);
+
+            if(roomWorkerIsIn != null)
+            {
+                roomWorkerIsIn.chatters.remove(worker);
+                whichWorkerInWhichRoom.remove(worker);
+                roomWorkerIsIn.letNextWorkerInQueueIn();
+            }
+
             for (ChatRoom room : chatRooms)
             {
                 if(room.peopleInQueue.contains(worker))
                 {
                     room.peopleInQueue.remove(worker);
-                    break;
                 }
             }
         }
@@ -312,6 +319,9 @@ public class MainServer {
 
             for (WorkerInNet worker : clientWriters)
             {
+                if(!worker.isLoggedIn)
+                    continue;
+
                 JSONObject userEntry = new JSONObject();
                 userEntry.put("ID", worker.getID());
                 userEntry.put("name", worker.getFullName());
