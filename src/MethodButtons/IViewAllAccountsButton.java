@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static MainClass.Main.littleErrorMessage;
 
-public class ViewAllAccountsButton implements IMethodObserver {
+public class IViewAllAccountsButton implements IMethodObserver {
     @Override
     public void Invoke() throws IOException, JSONException {
         try {
@@ -31,11 +31,11 @@ public class ViewAllAccountsButton implements IMethodObserver {
         } catch (IOException e) {
             System.out.println(littleErrorMessage);
             System.err.println("File I/O Exception: " + e);
-            return; // Go back to the menu
+            // Go back to the menu
         } catch (JSONException e) {
             System.out.println(littleErrorMessage);
             System.err.println("JSONException: " + e);
-            return; // Go back to the menu
+            // Go back to the menu
         }
     }
 

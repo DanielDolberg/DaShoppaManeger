@@ -5,7 +5,7 @@ import java.io.IOException;
 public class MethodMenuItem extends MenuItem {
 
     //an interface that will hold a method that is assigned to this MenuClasses.MenuItem
-    private IMethodObserver m_Observer;
+    protected IMethodObserver m_Observer;
 
     public MethodMenuItem(String i_Title)
     {

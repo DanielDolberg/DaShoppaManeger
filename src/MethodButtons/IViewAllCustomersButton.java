@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import static MainClass.Main.littleErrorMessage;
 
-public class ViewAllCustomersButton implements IMethodObserver
+public class IViewAllCustomersButton implements IMethodObserver
 {
     public void Invoke() throws IOException {
         try {
@@ -37,11 +37,11 @@ public class ViewAllCustomersButton implements IMethodObserver
         } catch (IOException e) {
             System.out.println(littleErrorMessage);
             System.err.println("File I/O Exception: " + e);
-            return; // Go back to the menu
+            // Go back to the menu
         } catch (JSONException e) {
             System.out.println(littleErrorMessage);
             System.err.println("JSONException: " + e);
-            return; // Go back to the menu
+            // Go back to the menu
         }
     }
 }

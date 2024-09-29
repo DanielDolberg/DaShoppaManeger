@@ -1,12 +1,11 @@
 package MainClass;
 
-import Logs.LogManager;
 import MethodButtons.*;
-import Utilities.JSONHandler;
+import ServerStuff.ConnectionToMainServer;
 import MenuClasses.MainMenuItem;
 import MenuClasses.MethodMenuItem;
 import MenuClasses.SubMenuItem;
-import org.json.JSONArray;
+import ShopClasses.WorkerClasses.Worker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,9 +18,8 @@ public class Main {
     public static boolean isAdmin = false;
     public static boolean isShiftManager = false;
     public static String workerBranch = "";
-    public static JSONObject theWorkerThatIsLoggedIn;
     public static String loggedInUsersName = "";
-    public static LogManager logManager = new LogManager();
+    public static Worker loggedInUser = null;
 
     private static final String bigErrorMessage = "A big error happened, please contact support";
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
@@ -41,33 +39,34 @@ public class Main {
         } catch (JSONException e) {
             System.out.println(bigErrorMessage);
             // Raised when trying to access a field or element that doesn't exist
+            e.printStackTrace();
             System.err.println("JSONException: " + e);
         } catch (NullPointerException e) { //
             System.out.println(bigErrorMessage);
             // If the structure in the JSON file doesn't match what the code expects, accessing a non-existent object
+            e.printStackTrace();
             System.err.println("NullPointerException: " + e);
         } catch (ClassCastException e) { //
             System.out.println(bigErrorMessage);
             // Occurs when you attempt to cast a JSON value to an incompatible type.
             // For example, trying to retrieve a string from a JSON field that holds an integer.
+            e.printStackTrace();
             System.err.println("ClassCastException: " + e);
         } catch (IOException e) {
             System.out.println(bigErrorMessage);
             // If the JSON file path does not exist or if there’s a problem reading the file (e.g., incorrect permissions).
+            e.printStackTrace();
             System.err.println("File I/O Exception: " + e);
         } catch (Exception e) {
             System.out.println(bigErrorMessage);
             // any Exception we didn't think of
+            e.printStackTrace();
             System.err.println("Unexpected Exception: " + e);
         }
     }
 
     public static void login()  throws IOException, JSONException {
-        JSONArray workersArray = null;
-
-        // Load the JSON data from the file
-        JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
-        workersArray = jsonData.getJSONArray("workers");
+        ConnectionToMainServer.ConnectToServer();
 
         isUserLoggedIn = false;
         int numOfTries = 0;
@@ -82,32 +81,37 @@ public class Main {
 
             numOfTries++;
 
-            // Check users (workers/admins)
-            for (int i = 0; i < workersArray.length(); i++) {
-                JSONObject user = workersArray.getJSONObject(i);
-                String userNameInJson = user.getString("username");
-                String passwordInJson = user.getString("password");
+            JSONObject areAuthTrue = ConnectionToMainServer.checkIfCredentialsAreTrue(userName,password);
 
-                if (userName.equals(userNameInJson) && password.equals(passwordInJson)) {
-                    isUserLoggedIn = true;
-                    String jobRole = user.getString("jobRole");
-                    if (jobRole.equalsIgnoreCase("ShiftManager")) {
-                        isShiftManager = true;
-                    }
+            if (areAuthTrue.getString("type").equals("CRED_VALID"))
+            {
+                JSONObject user = areAuthTrue.getJSONObject("workerinfo");
 
-                    theWorkerThatIsLoggedIn = user;
-                    loggedInUsersName = userNameInJson;
-                    workerBranch = user.getString("branchName");
-
-                    if (jobRole.equalsIgnoreCase("Admin")) {
-                        isAdmin = true;
-                        System.out.println("Welcome " + userNameInJson + ", you are logged in as an admin.");
-                    } else {
-                        isAdmin = false;
-                        System.out.println("Welcome " + userNameInJson + ", you are logged in as a worker.");
-                    }
-                    break;
+                isUserLoggedIn = true;
+                String jobRole = user.getString("jobRole");
+                if (jobRole.equalsIgnoreCase("ShiftManager")) {
+                    isShiftManager = true;
                 }
+
+                loggedInUsersName = userName;
+                loggedInUser = new Worker();
+                loggedInUser.setInfoFromJson(user);
+
+                workerBranch = user.getString("branchName");
+
+                if (jobRole.equalsIgnoreCase("Admin")) {
+                    isAdmin = true;
+                    System.out.println("Welcome " + loggedInUsersName + ", you are logged in as an admin.");
+                } else {
+                    isAdmin = false;
+                    System.out.println("Welcome " + loggedInUsersName + ", you are logged in as a worker.");
+                }
+                break;
+            }
+            else if (areAuthTrue.getString("type").equals("USER_ALREADY_LOGGED_IN"))
+            {
+                numOfTries--;
+                System.out.println("The Provided User Is Already Logged In From A Different Place. Please Use A Different Account");
             }
 
             if (!isUserLoggedIn && numOfTries < 3) {
@@ -120,6 +124,8 @@ public class Main {
         }
     }
 
+
+
     public static void setUpShop() throws IOException {
         MainMenuItem mainMenu = new MainMenuItem("DeShooppa Manager MainClass.Main Menu");
 
@@ -128,16 +134,16 @@ public class Main {
             SubMenuItem subMenuManageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
 
             MethodMenuItem methodViewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
-            methodViewAllAccounts.AttachObserver(new ViewAllAccountsButton());
+            methodViewAllAccounts.AttachObserver(new IViewAllAccountsButton());
             subMenuManageWorkers.AddOption(methodViewAllAccounts);
 
             MethodMenuItem methodRegisterNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem //DONE
-            methodRegisterNewAccount.AttachObserver(new AddNewWorkerButton()); //!!!change!!!
+            methodRegisterNewAccount.AttachObserver(new IAddNewWorkerButton()); //!!!change!!!
             subMenuManageWorkers.AddOption(methodRegisterNewAccount);
 
-//            MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
-//            methodUpdateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-//            subMenuManageWorkers.AddOption(methodUpdateAnAccount);
+            MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
+            methodUpdateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+            subMenuManageWorkers.AddOption(methodUpdateAnAccount);
 
             mainMenu.AddOption(subMenuManageWorkers);
         }
@@ -147,16 +153,16 @@ public class Main {
 
         if (!isAdmin) {
             MethodMenuItem methodViewBranchStock = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //DONE
-            methodViewBranchStock.AttachObserver(new ViewAllStockInThisBranchButton());
+            methodViewBranchStock.AttachObserver(new IViewAllStockInThisBranchButton());
             subMenuProductInventory.AddOption(methodViewBranchStock);
         }
 
-        MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer"); //MethodMenuItem //DONE
-        methodPerformPurchase.AttachObserver(new PurchaseMenu());
+        MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer"); //MethodMenuItem
+        methodPerformPurchase.AttachObserver(new IPurchaseMenu());
         subMenuProductInventory.AddOption(methodPerformPurchase);
 
         MethodMenuItem methodViewAllStock = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
-        methodViewAllStock.AttachObserver(new ViewStockInAllBranchesButton());
+        methodViewAllStock.AttachObserver(new IViewStockInAllBranchesButton());
         subMenuProductInventory.AddOption(methodViewAllStock);
 
         mainMenu.AddOption(subMenuProductInventory);
@@ -173,7 +179,7 @@ public class Main {
 //        subMenuManageCustomers.AddOption(methodViewCustomerDetails);
 
         MethodMenuItem methodViewAllCustomers = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
-        methodViewAllCustomers.AttachObserver(new ViewAllCustomersButton());
+        methodViewAllCustomers.AttachObserver(new IViewAllCustomersButton());
         subMenuManageCustomers.AddOption(methodViewAllCustomers);
 
         mainMenu.AddOption(subMenuManageCustomers);
@@ -183,16 +189,16 @@ public class Main {
 
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
 
-        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales by Branch"); //MethodMenuItem //DONE
-        methodViewSalesBranch.AttachObserver(new ViewSalesByBranchButton()); //!!!change!!!
+        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
+        methodViewSalesBranch.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesBranch);
 
-        MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem //DONE
-        methodViewSalesByProduct.AttachObserver(new ViewSalesByProductButton()); //!!!change!!!
+        MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
+        methodViewSalesByProduct.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByProduct);
 
-        MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem //DONE
-        methodViewSalesByCategory.AttachObserver(new ViewSalesByCategoryButton()); //!!!change!!!
+        MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
+        methodViewSalesByCategory.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageReports.AddOption(methodViewSalesByCategory);
 
         mainMenu.AddOption(subMenuManageReports);
@@ -211,14 +217,14 @@ public class Main {
         */
 
         MethodMenuItem startChat = new MethodMenuItem("openChat"); //!!!MethodMenuItem or sub?
-        startChat.AttachObserver(new IOpenChatButton());
+        startChat.AttachObserver(new IShowPossibleChatRecipients());
         mainMenu.AddOption(startChat);
 
         // Manage Logs - sub
         SubMenuItem subMenuManageLogs = new SubMenuItem("Manage Logs");
 
         MethodMenuItem methodViewLogs = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
-        methodViewLogs.AttachObserver(new LogManager()); //!!!change!!!
+        methodViewLogs.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
         subMenuManageLogs.AddOption(methodViewLogs);
 
         mainMenu.AddOption(subMenuManageLogs);
