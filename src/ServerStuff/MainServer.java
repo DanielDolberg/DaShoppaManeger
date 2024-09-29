@@ -181,9 +181,11 @@ public class MainServer {
             WorkerInNet leavingWorker = getWorkerById(workerID);
             ChatRoom room = whichWorkerInWhichRoom.get(leavingWorker);
 
-            room.chatters.remove(leavingWorker);
+            if(room != null) {
+                room.chatters.remove(leavingWorker);
 
-            room.letNextWorkerInQueueIn();
+                room.letNextWorkerInQueueIn();
+            }
         }
 
         private void handleAuthenticationRequest(JSONObject json)
@@ -248,14 +250,29 @@ public class MainServer {
 
             checkIfWorkerAlreadyisWaitingForRoomAndRemoveIfDoes(requestee);
 
+            boolean wasRoomJustCreated = false;
+
             ChatRoom room =  whichWorkerInWhichRoom.get(requestee);
 
             if(room == null)
             {
                 room = createNewRoom();
-            }
 
-            if(room.chatters.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin)
+                whichWorkerInWhichRoom.put(requester,room);
+                room.chatters.add(requester);
+                String response = "{ " +
+                        "'type':'REQUEST_TO_JOIN_CHAT_ACCEPTED'," +
+                        "'roomID':" + room.roomID +
+                        "}";
+
+                worker.responseFromServer.println(response);
+
+                MainServer.NotifyWorkerTheyJoinedTheChat(requestee, room);
+                room.chatters.add(requestee);
+
+
+            }
+            else if(room.chatters.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin)
             {
                 whichWorkerInWhichRoom.put(requester,room);
                 room.chatters.add(requester);
