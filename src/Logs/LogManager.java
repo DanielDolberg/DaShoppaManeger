@@ -1,4 +1,5 @@
 package Logs;
+
 import MenuClasses.IMethodObserver;
 
 import java.io.*;
@@ -7,7 +8,7 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class LogManager  implements IMethodObserver {
+public class LogManager implements IMethodObserver {
 
     private final String directoryPath;
     private final String fileName;
@@ -50,32 +51,47 @@ public class LogManager  implements IMethodObserver {
             System.out.println("Error details: " + e.getMessage());
             e.printStackTrace();
         }
-
-        // Initialize the timestamp format for each log entry
-//        updateTimestamp();
     }
+
     // Method to update the current timestamp
     private void updateTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.timestamp = sdf.format(new Date());
     }
 
-    // Write to the file using the generated logFile and timestamp
+    // Asynchronous write to the log file
     public void WriteToFile(String text) {
-        // Update timestamp with the current time before writing
-        updateTimestamp();
+        updateTimestamp();  // Update timestamp with the current time
 
-        // Write to the log file
-        try (PrintWriter pw = new PrintWriter (new BufferedWriter(new FileWriter(logFile, true)))) {
-            pw.println("[" + timestamp + "] " + text);  // Write timestamp and text
-        } catch (IOException e) {
-            System.out.println("Log file not found: " + e.getMessage());
-            e.printStackTrace();
+        // Create a new thread for writing to file asynchronously
+        new WriteTask(text).start();
+    }
+
+    // Inner class for handling asynchronous write task
+    private class WriteTask extends Thread {
+        private String textToWrite;
+
+        public WriteTask(String text) {
+            this.textToWrite = text;
+        }
+
+        @Override
+        public void run() {
+            // Write to the log file in a new thread
+            try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+                pw.println("[" + timestamp + "] " + textToWrite);  // Write timestamp and text
+                System.out.println("Successfully wrote to log file asynchronously.");
+            } catch (IOException e) {
+                System.out.println("Log file not found: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
+
+    // Synchronous read from the log file
     public void ReadFromFile() {
         Scanner scanner = new Scanner(System.in);
-        // Validate full name
+        // Validate logs date
         String logsDate;
         do {
             System.out.println("Enter logs date (format: yyyy-MM-dd) for example: 2024-09-23");
@@ -85,7 +101,7 @@ public class LogManager  implements IMethodObserver {
             }
         } while (!Pattern.matches("\\d{4}-\\d{2}-\\d{2}", logsDate));
 
-        // Read from the log file
+        // Read from the log file synchronously
         try {
             boolean found = false;
             boolean headingPrinted = false;  // To ensure heading is printed only once
@@ -115,4 +131,5 @@ public class LogManager  implements IMethodObserver {
             System.out.println("Log file not found: " + e.getMessage());
         }
     }
+
 }
