@@ -101,7 +101,7 @@ public class MainServer {
                 System.out.println("Error: " + e.getMessage());
             } finally {
                 synchronized (clientWriters) {
-                    clientWriters.remove(worker); // Remove client on disconnect
+                    disconnectUserFromAll(worker);
                 }
                 try {
                     socket.close();
@@ -109,6 +109,19 @@ public class MainServer {
                     e.printStackTrace();
                 }
             }
+        }
+
+        private static void disconnectUserFromAll(WorkerInNet worker)
+        {
+            clientWriters.remove(worker); // Remove client on disconnect
+
+            ChatRoom room = whichWorkerInWhichRoom.get(worker);
+
+            if(room != null) {
+                room.chatters.remove(worker);
+                room.letNextWorkerInQueueIn();
+            }
+
         }
 
         private void handleIncomingMessage(String message)
@@ -168,7 +181,7 @@ public class MainServer {
             WorkerInNet leavingWorker = getWorkerById(workerID);
             ChatRoom room = whichWorkerInWhichRoom.get(leavingWorker);
 
-            room.chatterBugs.remove(leavingWorker);
+            room.chatters.remove(leavingWorker);
 
             room.letNextWorkerInQueueIn();
         }
@@ -242,10 +255,10 @@ public class MainServer {
                 room = createNewRoom();
             }
 
-            if(room.chatterBugs.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin)
+            if(room.chatters.size() < 2 || requester.getJobRole() == JobRole.ShiftManager || requester.getJobRole() == JobRole.Admin)
             {
                 whichWorkerInWhichRoom.put(requester,room);
-                room.chatterBugs.add(requester);
+                room.chatters.add(requester);
                 String response = "{ " +
                         "'type':'REQUEST_TO_JOIN_CHAT_ACCEPTED'," +
                         "'roomID':" + room.roomID +
@@ -300,7 +313,7 @@ public class MainServer {
     public static class ChatRoom
     {
         LinkedList<String> conversation;
-        LinkedList<WorkerInNet> chatterBugs;
+        LinkedList<WorkerInNet> chatters;
         Queue<WorkerInNet> peopleInQueue;
 
         public static long numberOfRooms = 0;
@@ -309,7 +322,7 @@ public class MainServer {
         public ChatRoom()
         {
             conversation = new LinkedList<>();
-            chatterBugs = new LinkedList<>();
+            chatters = new LinkedList<>();
 
             roomID = numberOfRooms;
             numberOfRooms++;
@@ -320,8 +333,8 @@ public class MainServer {
         {
             System.out.println("Received: " + message);
             String extractedMessage = extractMessageFromGivenJson(message);
-            synchronized (chatterBugs) {
-                for (WorkerInNet writer : chatterBugs) {
+            synchronized (chatters) {
+                for (WorkerInNet writer : chatters) {
                     JSONObject sentObject = new JSONObject();
                     sentObject.put("type","RECEIVED_CHAT_MESSAGE");
                     sentObject.put("text",extractedMessage);
@@ -338,7 +351,11 @@ public class MainServer {
             {
                 WorkerInNet includedWorker = peopleInQueue.poll();
                 MainServer.NotifyWorkerTheyJoinedTheChat(includedWorker, this);
-                chatterBugs.add(includedWorker);
+                chatters.add(includedWorker);
+            }
+            else if(chatters.isEmpty()) //if the chat is empty delete it
+            {
+                chatRooms.remove(this);
             }
         }
 
