@@ -58,7 +58,7 @@ public class MainServer {
         notification.put("type", "NOTIFY_USER_JOIN_CHAT");
         notification.put("roomID", chatRoom.roomID);
 
-        workerToNotif.responseFromServer.println(notification);
+        workerToNotif.writeToWorker.println(notification);
     }
 
     // reads Jsons and loads info onto JsonArrays
@@ -97,7 +97,7 @@ public class MainServer {
         public void run() {
             try {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                worker.responseFromServer = new PrintWriter(socket.getOutputStream(), true);
+                worker.writeToWorker = new PrintWriter(socket.getOutputStream(), true);
 
                 synchronized (clientWriters) {
                     clientWriters.add(worker); // Add this client's writer to the set
@@ -190,7 +190,7 @@ public class MainServer {
             }
             response.put("chat",convo);
 
-            worker.responseFromServer.println(response);
+            worker.writeToWorker.println(response);
         }
 
         private void handleChatMessage(JSONObject message)
@@ -222,7 +222,7 @@ public class MainServer {
             WorkerInNet leavingWorker = getWorkerById(workerID);
             ChatRoom room = whichWorkerInWhichRoom.get(leavingWorker);
 
-            leavingWorker.responseFromServer.println("{'type':'USER_LEFT_CHAT'}");
+            leavingWorker.writeToWorker.println("{'type':'USER_LEFT_CHAT'}");
 
             if(room != null) {
                 room.chatters.remove(leavingWorker);
@@ -255,20 +255,20 @@ public class MainServer {
 
                 if(isUserAlreadyConnected)
                 {
-                    worker.responseFromServer.println("{ 'type': 'USER_ALREADY_LOGGED_IN' }");
+                    worker.writeToWorker.println("{ 'type': 'USER_ALREADY_LOGGED_IN' }");
                 }
                 else {
                     worker.setInfoFromJson(foundUser);
                     JSONObject response = new JSONObject();
                     response.put("type", "CRED_VALID");
                     response.put("workerinfo", foundUser);
-                    worker.responseFromServer.println(response);
+                    worker.writeToWorker.println(response);
                     worker.isLoggedIn = true;
                 }
             }
             else
             {
-                worker.responseFromServer.println("{ 'type': 'CRED_INVALID' }");
+                worker.writeToWorker.println("{ 'type': 'CRED_INVALID' }");
             }
         }
 
@@ -309,7 +309,7 @@ public class MainServer {
                         "'roomID':" + room.roomID +
                         "}";
 
-                requester.responseFromServer.println(response); // Notify the requester
+                requester.writeToWorker.println(response); // Notify the requester
 
                 MainServer.joinWorkerToRoom(requestedUser, room); // Add the requestedUser to the room
                 MainServer.NotifyWorkerTheyJoinedTheChat(requestedUser, room); // Notify the requestedUser to open the chat GUI
@@ -320,7 +320,7 @@ public class MainServer {
                         "'type':'REQUEST_TO_JOIN_CHAT_ACCEPTED'," +
                         "'roomID':" + room.roomID +
                         "}";
-                requester.responseFromServer.println(response); // Notify the requester
+                requester.writeToWorker.println(response); // Notify the requester
 
                 // Only notify the requester, as the requestedUser is already in the room
                 MainServer.joinWorkerToRoom(requester, room);
@@ -330,7 +330,7 @@ public class MainServer {
                 // If the room is full and the requester is not a ShiftManager or Admin, put them in a queue
                 room.peopleInQueue.add(requester);
                 String response = "{ 'type':'REQUEST_TO_JOIN_CHAT_PUT_ON_HOLD', 'position' :" + room.peopleInQueue.size() + "}";
-                requester.responseFromServer.println(response); // Notify the requester they are on hold
+                requester.writeToWorker.println(response); // Notify the requester they are on hold
             }
         }
 
@@ -377,7 +377,7 @@ public class MainServer {
             response.put("users",IDAndUser);
 
             //System.out.println(response);
-            worker.responseFromServer.println(response);
+            worker.writeToWorker.println(response);
         }
     }
 
@@ -405,14 +405,14 @@ public class MainServer {
             System.out.println("Received: " + message);
             String extractedMessage = extractMessageFromGivenJson(message);
             synchronized (chatters) {
-                for (WorkerInNet writer : chatters) {
+                for (WorkerInNet workerInCHat : chatters) {
                     JSONObject sentObject = new JSONObject();
                     sentObject.put("type","RECEIVED_CHAT_MESSAGE");
                     sentObject.put("text",extractedMessage);
 
-                    writer.responseFromServer.println(sentObject); // Broadcast message to all clients
-                    conversation.add(extractedMessage);
+                    workerInCHat.writeToWorker.println(sentObject); // Broadcast message to all clients
                 }
+                conversation.add(extractedMessage);
             }
         }
 
