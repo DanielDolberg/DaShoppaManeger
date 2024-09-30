@@ -21,7 +21,7 @@ public class Main {
     public static String loggedInUsersName = "";
     public static Worker loggedInUser = null;
     public static LogManager logManager = new LogManager();
-    private static final String bigErrorMessage = "A big error happened, please contact support";
+    public static final String bigErrorMessage = "A big error happened, please contact support";
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
 
     public static void main(String[] args) {

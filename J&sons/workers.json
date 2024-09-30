@@ -64,5 +64,49 @@
         "ID": 6,
         "accountNumber": 666,
         "username": "admin"
+    },
+    {
+        "workerNumber": 987117015,
+        "password": "0000",
+        "phoneNumber": "+972-00-0000001",
+        "fullName": "Roee Zimon",
+        "branchName": "All",
+        "jobRole": "Admin",
+        "ID": 7,
+        "accountNumber": 777,
+        "username": "RoeeZ"
+    },
+    {
+        "workerNumber": 605817663,
+        "password": "1111",
+        "phoneNumber": "+972-22-2222222",
+        "fullName": "Eli Z",
+        "branchName": "Rishon Letzion",
+        "jobRole": "Cashier",
+        "ID": 8,
+        "accountNumber": 888,
+        "username": "Eli"
+    },
+    {
+        "workerNumber": 590018016,
+        "password": "9999",
+        "phoneNumber": "+972-11-1111110",
+        "fullName": "Aadam Sendler",
+        "branchName": "Ashdod",
+        "jobRole": "SalesPerson",
+        "ID": 9,
+        "accountNumber": 999,
+        "username": "adam"
+    },
+    {
+        "workerNumber": 127289129,
+        "password": "1010",
+        "phoneNumber": "+972-99-9999999",
+        "fullName": "New Worker",
+        "branchName": "Ashdod",
+        "jobRole": "Cashier",
+        "ID": 10,
+        "accountNumber": 1110,
+        "username": "newWorker"
     }
 ]}

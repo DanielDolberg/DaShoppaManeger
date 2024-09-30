@@ -14,3 +14,19 @@
 [2024-09-30 11:48:52] INFO: New worker registered with ID: 7 by User: admin
 [2024-09-30 12:04:48] CHAT_MESSAGE: 'hi' sent by User: Elinor in Room ID: 0
 [2024-09-30 12:37:32] PURCHASE: Sneakers by Customer ID: Customer Customio - Price: 65.00 at Branch: Rishon Letzion
+[2024-09-30 12:42:31] PURCHASE: T-Shirt by Customer ID: John Doe - Price: 25.00 at Branch: Rishon Letzion
+[2024-09-30 12:43:36] INFO: New customer registered with ID: 102938477 by User: Aiden
+[2024-09-30 12:44:07] PURCHASE: Sweater by Customer ID: Maayan Maya - Price: 79.99 at Branch: Rishon Letzion
+[2024-09-30 12:45:27] PURCHASE: Cap by Customer ID: Maayan Maya - Price: 31.99 at Branch: Rishon Letzion
+[2024-09-30 12:49:07] PURCHASE: T-Shirt by Customer ID: Maayan Maya - Price: 25.00 at Branch: Rishon Letzion
+[2024-09-30 12:51:32] CHAT_MESSAGE: 'hi there' sent by User: Elinor in Room ID: 1
+[2024-09-30 12:51:38] CHAT_MESSAGE: 'hola' sent by User: admin in Room ID: 1
+[2024-09-30 12:51:51] CHAT_MESSAGE: 'sup' sent by User: Shani in Room ID: 0
+[2024-09-30 12:51:56] CHAT_MESSAGE: 'good sales today' sent by User: Aiden in Room ID: 0
+[2024-09-30 12:52:00] CHAT_MESSAGE: 'bu-bye' sent by User: Aiden in Room ID: 0
+[2024-09-30 12:55:25] INFO: New worker registered with ID: 7 by User: admin
+[2024-09-30 12:57:45] INFO: New worker registered with ID: 8 by User: RoeeZ
+[2024-09-30 13:14:41] INFO: New worker registered with ID: 9 by User: admin
+[2024-09-30 13:26:56] INFO: New worker registered with ID: 10 by User: admin
+[2024-09-30 13:28:10] CHAT_MESSAGE: 'hi' sent by User: Aiden in Room ID: 0
+[2024-09-30 13:28:14] CHAT_MESSAGE: 'hello' sent by User: newWorker in Room ID: 0

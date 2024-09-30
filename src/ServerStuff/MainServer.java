@@ -11,6 +11,7 @@ import java.util.*;
 import ShopClasses.WorkerClasses.JobRole;
 import Utilities.JSONHandler;
 import org.json.*;
+import MainClass.Main;
 
 public class MainServer {
     private static final Set<WorkerInNet> clientWriters = new HashSet<>();
@@ -33,8 +34,15 @@ public class MainServer {
                 new ClientHandler(serverSocket.accept()).start(); // Accept incoming client connections
             }
         } catch (IOException e) {
+            System.out.println(MainClass.Main.bigErrorMessage);
             // If the JSON file path does not exist or if there’s a problem reading the file (e.g., incorrect permissions).
+            e.printStackTrace();
             System.err.println("File I/O Exception: " + e);
+        } catch (Exception e) {
+            System.out.println(MainClass.Main.bigErrorMessage);
+            // any Exception we didn't think of
+            e.printStackTrace();
+            System.err.println("Unexpected Exception: " + e);
         }
         System.err.println("closed server.");
     }
@@ -145,7 +153,11 @@ public class MainServer {
             switch (typeOfMessage)
             {
                 case "CHECK_IF_VALID_CRED" :
-                    handleAuthenticationRequest(json);
+                    try {
+                        handleAuthenticationRequest(json);
+                    } catch (Exception e) {
+
+                    }
                     break;
                 case "CHAT_MESSAGE":
                     handleChatMessage(json);
@@ -231,12 +243,13 @@ public class MainServer {
             }
         }
 
-        private void handleAuthenticationRequest(JSONObject json)
-        {
+        private void handleAuthenticationRequest(JSONObject json) throws IOException {
             String userName = json.getString("username");
             String password = json.getString("password");
 
             JSONObject foundUser = null;
+            JSONObject jsonDataWorkers = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
+            workers = jsonDataWorkers.getJSONArray("workers");
 
             for (int i = 0; i < workers.length(); i++) {
                 JSONObject user = workers.getJSONObject(i);

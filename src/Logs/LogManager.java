@@ -82,8 +82,10 @@ public class LogManager implements IMethodObserver {
                 pw.println("[" + timestamp + "] " + textToWrite);  // Write timestamp and text
                 System.out.println("Successfully wrote to log file asynchronously.");
             } catch (IOException e) {
-                System.out.println("Log file not found: " + e.getMessage());
+                System.out.println("IO Exception: " + e.getMessage());
                 e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("Exception: " + e.getMessage());
             }
         }
     }
@@ -129,6 +131,8 @@ public class LogManager implements IMethodObserver {
             System.out.println("\n");
         } catch (FileNotFoundException e) {
             System.out.println("Log file not found: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
         }
     }
 

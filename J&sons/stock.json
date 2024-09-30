@@ -35,7 +35,7 @@
         {
             "itemName": "T-Shirt",
             "price": 49.99,
-            "amountInStock": 2
+            "amountInStock": 0
         },
         {
             "itemName": "Jeans",
@@ -50,7 +50,7 @@
         {
             "itemName": "Sweater",
             "price": 79.99,
-            "amountInStock": 6
+            "amountInStock": 5
         },
         {
             "itemName": "Sneakers",
@@ -60,7 +60,7 @@
         {
             "itemName": "Cap",
             "price": 39.99,
-            "amountInStock": 2
+            "amountInStock": 1
         }
     ]}
 }}

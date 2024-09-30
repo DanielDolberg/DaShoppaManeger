@@ -52,5 +52,11 @@
         "fullName": "Karen Karenio",
         "ID": "111111111",
         "status": "Returning"
+    },
+    {
+        "phoneNumber": "+972-00-0000001",
+        "fullName": "Maayan Maya",
+        "ID": "102938477",
+        "status": "VIP"
     }
 ]}
