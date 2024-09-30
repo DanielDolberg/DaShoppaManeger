@@ -25,6 +25,8 @@ public class Main {
     public static final String littleErrorMessage = "Met an error, couldn't do task, returning to menu. please contact support";
 
     public static void main(String[] args) {
+        printBanner(); // Call to print the banner
+
         try {
             // login screen
             login();
@@ -111,7 +113,7 @@ public class Main {
             else if (areAuthTrue.getString("type").equals("USER_ALREADY_LOGGED_IN"))
             {
                 numOfTries--;
-                System.out.println("The Provided User Is Already Logged In From A Different Place. Please Use A Different Account");
+                System.out.println("The provided user is already logged in from a different place. Please use a different account");
             }
 
             if (!isUserLoggedIn && numOfTries < 3) {
@@ -133,17 +135,13 @@ public class Main {
             // Manage Workers (admin only) - sub
             SubMenuItem subMenuManageWorkers = new SubMenuItem("Manage Workers (Admin Only)");
 
-            MethodMenuItem methodViewAllAccounts = new MethodMenuItem("View All Accounts"); //MethodMenuItem //DONE
+            MethodMenuItem methodViewAllAccounts = new MethodMenuItem("View All Accounts");
             methodViewAllAccounts.AttachObserver(new IViewAllAccountsButton());
             subMenuManageWorkers.AddOption(methodViewAllAccounts);
 
-            MethodMenuItem methodRegisterNewAccount = new MethodMenuItem("Register New Account"); //MethodMenuItem //DONE
+            MethodMenuItem methodRegisterNewAccount = new MethodMenuItem("Register New Account");
             methodRegisterNewAccount.AttachObserver(new IAddNewWorkerButton()); //!!!change!!!
             subMenuManageWorkers.AddOption(methodRegisterNewAccount);
-
-            MethodMenuItem methodUpdateAnAccount = new MethodMenuItem("Update An Account"); //MethodMenuItem
-            methodUpdateAnAccount.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-            subMenuManageWorkers.AddOption(methodUpdateAnAccount);
 
             mainMenu.AddOption(subMenuManageWorkers);
         }
@@ -152,16 +150,16 @@ public class Main {
         SubMenuItem subMenuProductInventory = new SubMenuItem("Manage Stock");
 
         if (!isAdmin) {
-            MethodMenuItem methodViewBranchStock = new MethodMenuItem("View All Stock in This Branch"); //MethodMenuItem //DONE
+            MethodMenuItem methodViewBranchStock = new MethodMenuItem("View All Stock in This Branch");
             methodViewBranchStock.AttachObserver(new IViewAllStockInThisBranchButton());
             subMenuProductInventory.AddOption(methodViewBranchStock);
         }
 
-        MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer"); //MethodMenuItem
+        MethodMenuItem methodPerformPurchase = new MethodMenuItem("Perform a Purchase on behalf of a Customer");
         methodPerformPurchase.AttachObserver(new IPurchaseMenu());
         subMenuProductInventory.AddOption(methodPerformPurchase);
 
-        MethodMenuItem methodViewAllStock = new MethodMenuItem("View Product Stock in All Branches"); //MethodMenuItem //DONE
+        MethodMenuItem methodViewAllStock = new MethodMenuItem("View Product Stock in All Branches");
         methodViewAllStock.AttachObserver(new IViewStockInAllBranchesButton());
         subMenuProductInventory.AddOption(methodViewAllStock);
 
@@ -170,15 +168,7 @@ public class Main {
         // Manage Customers - sub
         SubMenuItem subMenuManageCustomers = new SubMenuItem("Manage Customers");
 
-//        MethodMenuItem methodAddNewCustomer = new MethodMenuItem("Add New Customer"); //MethodMenuItem
-//        methodAddNewCustomer.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
-//        subMenuManageCustomers.AddOption(methodAddNewCustomer);
-
-//        MethodMenuItem methodViewCustomerDetails = new MethodMenuItem("View Customer's Details"); //MethodMenuItem
-//        methodViewCustomerDetails.AttachObserver(new testingButton_Delete_later()); //!!!change!!! //methodViewAllCustomers might answer this
-//        subMenuManageCustomers.AddOption(methodViewCustomerDetails);
-
-        MethodMenuItem methodViewAllCustomers = new MethodMenuItem("View All The Customers"); //MethodMenuItem  //DONE
+        MethodMenuItem methodViewAllCustomers = new MethodMenuItem("View All The Customers");
         methodViewAllCustomers.AttachObserver(new IViewAllCustomersButton());
         subMenuManageCustomers.AddOption(methodViewAllCustomers);
 
@@ -186,49 +176,45 @@ public class Main {
 
 
         // Manage Sales Analytics Reports - sub
-
         SubMenuItem subMenuManageReports = new SubMenuItem("View Sales Statistics (all branches)");
 
-        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch"); //MethodMenuItem
-        methodViewSalesBranch.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        MethodMenuItem methodViewSalesBranch = new MethodMenuItem("View Sales for Branch");
+        methodViewSalesBranch.AttachObserver(new IViewSalesByBranchButton());
         subMenuManageReports.AddOption(methodViewSalesBranch);
 
-        MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product"); //MethodMenuItem
-        methodViewSalesByProduct.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        MethodMenuItem methodViewSalesByProduct = new MethodMenuItem("View Sales by Product");
+        methodViewSalesByProduct.AttachObserver(new IViewSalesByProductButton());
         subMenuManageReports.AddOption(methodViewSalesByProduct);
 
-        MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category"); //MethodMenuItem
-        methodViewSalesByCategory.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        MethodMenuItem methodViewSalesByCategory = new MethodMenuItem("View Sales by Category");
+        methodViewSalesByCategory.AttachObserver(new IViewSalesByCategoryButton());
         subMenuManageReports.AddOption(methodViewSalesByCategory);
 
         mainMenu.AddOption(subMenuManageReports);
 
-
-        // Manage Chat - sub
-        /*
-        SubMenuItem subMenuManageChat = new SubMenuItem("Open Chat");
-
-        SubMenuItem methodStartChat = new SubMenuItem("Start Chat with Another Employee"); //!!!MethodMenuItem or sub?
-        subMenuManageChat.AddOption(methodStartChat);
-        if (isShiftManager || isAdmin) {
-            SubMenuItem methodManagerJoinsChat = new SubMenuItem("Join Existing Chat (If Shift Manager)"); //!!!MethodMenuItem or sub?
-            subMenuManageChat.AddOption(methodManagerJoinsChat);
-        }
-        */
-
-        MethodMenuItem startChat = new MethodMenuItem("Open Chat"); //!!!MethodMenuItem or sub?
+        // Open Chat - sub
+        MethodMenuItem startChat = new MethodMenuItem("Open Chat");
         startChat.AttachObserver(new IShowPossibleChatRecipients());
         mainMenu.AddOption(startChat);
 
         // Manage Logs - sub
         SubMenuItem subMenuManageLogs = new SubMenuItem("Manage Logs");
 
-        MethodMenuItem methodViewLogs = new MethodMenuItem("view Logs by Date"); //MethodMenuItem
-        methodViewLogs.AttachObserver(new testingButton_Delete_later()); //!!!change!!!
+        MethodMenuItem methodViewLogs = new MethodMenuItem("view Logs by Date");
+        methodViewLogs.AttachObserver(logManager);
         subMenuManageLogs.AddOption(methodViewLogs);
 
         mainMenu.AddOption(subMenuManageLogs);
 
         mainMenu.ActivateMenuItem();
+    }
+
+    public static void printBanner() {
+        System.out.println("  ____        ____  _                             __  __                                  ");
+        System.out.println(" |  _ \\  __ _/ ___|| |__   ___  _ __  _ __   __ _|  \\/  | __ _ _ __   ___  __ _  ___ _ __ ");
+        System.out.println(" | | | |/ _` \\___ \\| '_ \\ / _ \\| '_ \\| '_ \\ / _` | |\\/| |/ _` | '_ \\ / _ \\/ _` |/ _ \\ '__|");
+        System.out.println(" | |_| | (_| |___) | | | | (_) | |_) | |_) | (_| | |  | | (_| | | | |  __/ (_| |  __/ |   ");
+        System.out.println(" |____/ \\__,_|____/|_| |_|\\___/| .__/| .__/ \\__,_|_|  |_|\\__,_|_| |_|\\___|\\__, |\\___|_|   ");
+        System.out.println("                               |_|   |_|                                  |___/            ");
     }
 }

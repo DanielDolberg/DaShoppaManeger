@@ -6,79 +6,67 @@
             {
                 "itemName": "T-Shirt",
                 "revenue": 0,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Jeans",
                 "revenue": 0,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Jacket",
                 "revenue": 0,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Sweater",
                 "revenue": 79.99,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Sandals",
                 "revenue": 314.97900000000004,
-                "price": 0,
                 "category": "Footwear"
             },
             {
                 "itemName": "Sunglasses",
                 "revenue": 250,
-                "price": 0,
                 "category": "Accessories"
             }
         ]
     },
     "Rishon Letzion": {
-        "totalAmountSold": 7,
-        "totalRevenue": 698.945,
+        "totalAmountSold": 8,
+        "totalRevenue": 763.945,
         "items": [
             {
                 "itemName": "T-Shirt",
                 "revenue": 74.985,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Jeans",
                 "revenue": 399.98,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Jacket",
                 "revenue": 0,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Sweater",
                 "revenue": 79.99,
-                "price": 0,
                 "category": "Apparel"
             },
             {
                 "itemName": "Sneakers",
-                "revenue": 104,
-                "price": 0,
+                "revenue": 169,
                 "category": "Footwear"
             },
             {
                 "itemName": "Cap",
                 "revenue": 39.99,
-                "price": 0,
                 "category": "Accessories"
             }
         ]

@@ -11,3 +11,6 @@
 [2024-09-30 11:17:59] CHAT_MESSAGE: 'sheesh' sent by User: admin in Room ID: 0
 [2024-09-30 11:19:13] CHAT_MESSAGE: 'Elinorrr' sent by User: Daniel in Room ID: 1
 [2024-09-30 11:19:16] CHAT_MESSAGE: 'Heya' sent by User: Elinor in Room ID: 1
+[2024-09-30 11:48:52] INFO: New worker registered with ID: 7 by User: admin
+[2024-09-30 12:04:48] CHAT_MESSAGE: 'hi' sent by User: Elinor in Room ID: 0
+[2024-09-30 12:37:32] PURCHASE: Sneakers by Customer ID: Customer Customio - Price: 65.00 at Branch: Rishon Letzion

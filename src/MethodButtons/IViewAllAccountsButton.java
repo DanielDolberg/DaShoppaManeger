@@ -15,16 +15,15 @@ public class IViewAllAccountsButton implements IMethodObserver {
     public void Invoke() throws IOException, JSONException {
         try {
             // Read from JSON and create an array of all accounts
-            JSONObject jsonData;
-            jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
+            JSONObject jsonData = JSONHandler.readFrom(JSONHandler.WorkersJsonFilePath);
 
             // Get the array for workers (includes all accounts)
             JSONArray workersArray = jsonData.getJSONArray("workers");
 
             // Print table header
-            System.out.printf("%-20s %-6s %-16s %-15s %-18s %-15s %-12s %-20s%n",
-                    "Full Name", "ID", "Phone Number", "Account Number", "Branch Name", "Job Role", "Username", "Password");
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("%-20s %-5s %-16s %-15s %-18s %-15s %-15s %-12s %-12s%n",
+                    "Full Name", "ID", "Phone Number", "Account Number", "Branch Name", "Job Role", "Username", "Password", "Worker Number");
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Print each worker's information in table format
             printAccountsArray(workersArray);
@@ -51,10 +50,11 @@ public class IViewAllAccountsButton implements IMethodObserver {
             String jobRole = account.getString("jobRole");
             String username = account.getString("username");
             String password = account.getString("password");
+            int workerNumber = account.getInt("workerNumber"); // Add worker number retrieval
 
-            // Print account information
-            System.out.printf("%-20s %-5d %-15s %-12d %-20s %-15s %-10s %-15s%n",
-                    fullName, id, phoneNumber, accountNumber, branchName, jobRole, username, password);
+            // Print account information with corrected format
+            System.out.printf("%-20s %-5d %-16s %-15d %-18s %-15s %-15s %-12s %-12d%n",
+                    fullName, id, phoneNumber, accountNumber, branchName, jobRole, username, password, workerNumber); // Include worker number in output
         }
     }
 }

@@ -50,7 +50,7 @@ public class Worker
 
     public void setInfoFromJson(JSONObject json) {
         jobRole = convertTextToJobRole(json.getString("jobRole"));
-        workerNumber = -1;
+        workerNumber = json.getLong("workerNumber");
         branchName = json.getString("branchName");
         accountNumber = json.getLong("accountNumber");
         phoneNumber = json.getString("phoneNumber");

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class ViewSalesByProductButton implements IMethodObserver {
+public class IViewSalesByProductButton implements IMethodObserver {
     public void Invoke() throws IOException {
         JSONObject salesData = JSONHandler.readFrom(JSONHandler.SalesJsonFilePath);
         JSONObject branches = salesData.getJSONObject("branches");

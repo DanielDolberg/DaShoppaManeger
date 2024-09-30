@@ -1,5 +1,6 @@
 {"workers": [
     {
+        "workerNumber": 713809861,
         "password": "1234",
         "phoneNumber": "+972-54-2405746",
         "fullName": "Aiden Kaminsky",
@@ -10,6 +11,7 @@
         "username": "Aiden"
     },
     {
+        "workerNumber": 874752289,
         "password": "09876",
         "phoneNumber": "+972-52-2778898",
         "fullName": "Daniel Dolberg",
@@ -20,7 +22,8 @@
         "username": "Daniel"
     },
     {
-        "password": "2TZsgaXK6vXyo6FSzA0QW0odN7x5oWj",
+        "workerNumber": 689752198,
+        "password": "Chen123",
         "phoneNumber": "+972-54-5350435",
         "fullName": "Chen Moasis",
         "branchName": "Rishon Letzion",
@@ -30,6 +33,7 @@
         "username": "Chen"
     },
     {
+        "workerNumber": 511449166,
         "password": "shashy123",
         "phoneNumber": "+972-52-7529608",
         "fullName": "Shani Elgamil",
@@ -40,6 +44,7 @@
         "username": "Shani"
     },
     {
+        "workerNumber": 319342111,
         "password": "12345678",
         "phoneNumber": "+972-55-8822676",
         "fullName": "Elinor Zalogin",
@@ -50,23 +55,14 @@
         "username": "Elinor"
     },
     {
+        "workerNumber": 889902533,
         "password": "admin123",
         "phoneNumber": "+972-55-8822676",
         "fullName": "Admin User",
         "branchName": "All",
         "jobRole": "Admin",
         "ID": 6,
-        "accountNumber": 1,
+        "accountNumber": 666,
         "username": "admin"
-    },
-    {
-        "password": "10293847",
-        "phoneNumber": "+972-55-5555555",
-        "fullName": "Dan Levis",
-        "branchName": "All",
-        "jobRole": "Cashier",
-        "ID": 7,
-        "accountNumber": 777,
-        "username": "danny"
     }
 ]}
