@@ -4,3 +4,10 @@
 [2024-09-27 15:54:42] INFO: New customer registered with ID: 111111111 by User: Aiden
 [2024-09-27 15:54:46] PURCHASE: Jeans by Customer ID: Karen Karenio - Price: 199.99 at Branch: Rishon Letzion
 
+[2024-09-30 11:16:53] CHAT_MESSAGE: 'Heya' sent by User: Shani in Room ID: 0
+[2024-09-30 11:16:59] CHAT_MESSAGE: 'Hello how are you' sent by User: Aiden in Room ID: 0
+[2024-09-30 11:17:04] CHAT_MESSAGE: 'I'm good' sent by User: Shani in Room ID: 0
+[2024-09-30 11:17:09] CHAT_MESSAGE: 'Back to work you two' sent by User: admin in Room ID: 0
+[2024-09-30 11:17:59] CHAT_MESSAGE: 'sheesh' sent by User: admin in Room ID: 0
+[2024-09-30 11:19:13] CHAT_MESSAGE: 'Elinorrr' sent by User: Daniel in Room ID: 1
+[2024-09-30 11:19:16] CHAT_MESSAGE: 'Heya' sent by User: Elinor in Room ID: 1

@@ -216,7 +216,7 @@ public class Main {
         }
         */
 
-        MethodMenuItem startChat = new MethodMenuItem("openChat"); //!!!MethodMenuItem or sub?
+        MethodMenuItem startChat = new MethodMenuItem("Open Chat"); //!!!MethodMenuItem or sub?
         startChat.AttachObserver(new IShowPossibleChatRecipients());
         mainMenu.AddOption(startChat);
 

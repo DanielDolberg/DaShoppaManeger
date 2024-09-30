@@ -14,7 +14,9 @@ import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 
 import MainClass.Main;
-import org.json.JSONObject;
+
+import static MainClass.Main.logManager;
+import static MainClass.Main.workerBranch;
 
 public class ChatClient {
     private static final String SERVER_ADDRESS = "localhost"; // Change this to server IP if needed
@@ -158,6 +160,14 @@ public class ChatClient {
         // Format the current time
         String formattedTime = formatter.format(currentTime);
 
+        String logEntry = String.format(
+                "CHAT_MESSAGE: '%s' sent by User: %s in Room ID: %d",
+                message,
+                name,
+                IDofRoom,
+                formattedTime
+        );
+
         String finalMessage =  "{" +
                 "'type':'CHAT_MESSAGE'," +
                 "'roomID':" + IDofRoom +"," +
@@ -166,6 +176,8 @@ public class ChatClient {
                 "time_sent:" + '"' + formattedTime + '"' +
                 "}";
 
+        // Log the purchase
+        logManager.WriteToFile(logEntry);
         return finalMessage;
 
     }
